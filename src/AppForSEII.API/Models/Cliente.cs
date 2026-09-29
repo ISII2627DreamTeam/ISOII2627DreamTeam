@@ -10,6 +10,6 @@ public class Cliente : ApplicationUser
     {
         DireccionFacturacion = direccionFacturacion;
     }
-    public string? DireccionFacturacion {get;set;}
+    public string DireccionFacturacion {get;set;}
 }
     
