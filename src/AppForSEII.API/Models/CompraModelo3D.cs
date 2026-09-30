@@ -1,12 +1,5 @@
 namespace APPForSEII.API.Models;
 
-public enum MetodoPago
-{
-    TarjetaCredito,
-    PayPal,
-    Bizum
-}
-
 
 public class CompraModelo3D
 {
