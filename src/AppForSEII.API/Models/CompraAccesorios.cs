@@ -34,4 +34,6 @@ public class CompraAccesorios
 
     public decimal PrecioTotal { get; set; }
     
+    public IList<LineaCompraAccesorio> LineasCompra { get; set; } = new List<LineaCompraAccesorio>();
+    
 }
