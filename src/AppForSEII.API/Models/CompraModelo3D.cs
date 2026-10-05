@@ -1,4 +1,4 @@
-namespace APPForSEII.API.Models;
+namespace AppForSEII.API.Models;
 
 
 public class CompraModelo3D
@@ -27,4 +27,6 @@ public class CompraModelo3D
     public decimal PrecioTotal { get; set; }
 
     public MetodoPago MetodoPago { get; set; }
+
+    public IList<LineaCompraModelo> LineasCompra { get; set; } = new List<LineaCompraModelo>();
 }
