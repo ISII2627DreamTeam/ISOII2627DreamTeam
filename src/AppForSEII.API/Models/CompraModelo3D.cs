@@ -1,4 +1,4 @@
-namespace APPForSEII.API.Models;
+namespace AppForSEII.API.Models;
 
 
 public class CompraModelo3D
