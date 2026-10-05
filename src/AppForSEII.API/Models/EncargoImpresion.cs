@@ -1,8 +1,5 @@
 namespace AppForSEII.API.Models;
 
-using System;
-using System.Collections.Generic;
-
 public class EncargoImpresion
 {
     public EncargoImpresion()
