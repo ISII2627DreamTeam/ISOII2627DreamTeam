@@ -16,4 +16,6 @@ public class Modelo3D
     public string Categoría { get; set; }
     public FormatoModelo3D Formato { get; set; }
     public decimal Precio { get; set; }
+
+    public IList<LineaCompraModelo> LineasCompra { get; set; } = new List<LineaCompraModelo>();
 }
