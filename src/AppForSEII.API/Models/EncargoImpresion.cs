@@ -15,11 +15,10 @@ public class EncargoImpresion
     public decimal PrecioTotal { get; set; }
     public MetodoPago MetodoPago { get; set; }
 
-    // --- Relación con Cliente ---
+    
     public string ClienteId { get; set; }
     public Cliente Cliente { get; set; }
 
-    // --- COMUNICACIÓN CON LINEA ENCARGO (1 a Muchos) ---
-    // Un encargo contiene una lista de líneas de encargo
+    
     public IList<LineaEncargo> LineasEncargo { get; set; } = new List<LineaEncargo>();
 }

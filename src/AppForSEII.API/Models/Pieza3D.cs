@@ -9,11 +9,7 @@ public class Pieza3D
     public decimal Peso { get; set; }
     public CategoriaPieza Categoria { get; set; }
 
-    // --- COMUNICACIÓN CON MATERIALES ---
-    // Una pieza tiene un conjunto (HashSet) de materiales válidos
-    public HashSet<Material> MaterialesValidos { get; set; } = new HashSet<Material>();
+    public IList<Material> MaterialesValidos { get; set; } = new List<Material>();
 
-    // --- COMUNICACIÓN CON LINEA ENCARGO (Inversa opcional, pero recomendada) ---
-    // Una pieza puede estar en muchas líneas de encargo
     public IList<LineaEncargo> LineasEncargo { get; set; } = new List<LineaEncargo>();
 }
