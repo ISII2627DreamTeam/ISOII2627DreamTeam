@@ -1,5 +1,6 @@
 namespace AppForSEII.API.Models;
 
+using System.Collections.Generic;
 public class Accesorio
 {
     public Accesorio()
@@ -28,4 +29,6 @@ public class Accesorio
     public int CantidadDisponible { get; set; }
 
     public decimal Precio { get; set; }
+
+    public IList<LineaCompraAccesorio> LineasCompra { get; set; } = new List<LineaCompraAccesorio>();
 }

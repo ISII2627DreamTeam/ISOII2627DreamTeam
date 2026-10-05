@@ -33,4 +33,5 @@ public class CompraAccesorios
     public MetodoPago MetodoPago { get; set; }
 
     public decimal PrecioTotal { get; set; }
+    
 }
