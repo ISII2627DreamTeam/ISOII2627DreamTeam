@@ -5,5 +5,5 @@ public enum CategoriaPieza
     Decoracion,
     MiniaturasYMaquetas,
     Repuestos,
-    HerramientasYAccesorios
+    HerramientasYAccesorios 
 }
