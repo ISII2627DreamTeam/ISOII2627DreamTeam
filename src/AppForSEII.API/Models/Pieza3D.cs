@@ -4,7 +4,7 @@ namespace AppForSEII.API.Models;
 
 public class Pieza3D
 {
-    public Pieza3D()  //No se si esta bien
+    public Pieza3D() 
     {
         
     }
