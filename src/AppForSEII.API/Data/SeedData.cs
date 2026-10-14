@@ -19,6 +19,13 @@ namespace AppForSEII.API.Data {
                 logger.LogError(ex, "An error occurred seeding the Users in the Database.");
             }
 
+           try {
+                seedImpresa3D(dbContext);
+            }
+            catch (Exception ex) {
+                logger.LogError(ex, "Ha ocurrido un error al sembrar las impresoras 3D en la base de datos.");
+            }
+
  
 
         }
@@ -69,6 +76,19 @@ namespace AppForSEII.API.Data {
                 }
             }
 
+        }
+
+        public static void seedImpresa3D(ApplicationDbContext dbContext) {
+            if (!dbContext.Impresora3Ds.Any()) {
+                var impresoras = new List<Impresora3D> {
+                    new Impresora3D { Id = 1, Nombre = "Impresora 3D A", Modelo = "Modelo A" , Descripcion = "Impresora 3D de alta calidad para prototipos y producción en serie.", Tipo = TipoImpresora.Filamento, PrecioKilovatioHora = 0.15m, PrecioReserva = 10.00m },
+                    new Impresora3D { Id = 2, Nombre = "Impresora 3D B", Modelo = "Modelo B", Descripcion = "Impresora 3D de resina para detalles finos y acabados suaves.", Tipo = TipoImpresora.Resina, PrecioKilovatioHora = 0.20m, PrecioReserva = 15.00m },
+                    new Impresora3D { Id = 3, Nombre = "Impresora 3D C", Modelo = "Modelo C", Descripcion = "Impresora 3D de bajo costo para uso educativo.", Tipo = TipoImpresora.Filamento, PrecioKilovatioHora = 0.10m, PrecioReserva = 5.00m }
+                };
+
+                dbContext.Impresora3Ds.AddRange(impresoras);
+                dbContext.SaveChanges();
+            }
         }
 
 
