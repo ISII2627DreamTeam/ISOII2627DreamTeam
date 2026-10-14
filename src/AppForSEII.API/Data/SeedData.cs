@@ -11,7 +11,7 @@ namespace AppForSEII.API.Data {
                 logger.LogError(ex, "An error occurred seeding the roles in the Database.");
             }
 
-            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<Cliente>>();
             try {
                 SeedUsers(userManager, rolesNames);
             }
@@ -37,10 +37,10 @@ namespace AppForSEII.API.Data {
 
         }
 
-        public static void SeedUsers(UserManager<ApplicationUser> userManager, List<string> roles) {
+        public static void SeedUsers(UserManager<Cliente> userManager, List<string> roles) {
             //first, it checks the user does not already exist in the DB
             if (userManager.FindByNameAsync("elena@uclm.es").Result == null) {
-                ApplicationUser user = new ApplicationUser("1", "Elena", "Navarro Martínez", "elena@uclm.es");
+                Cliente user = new ("1", "Elena", "Navarro Martínez", "elena@uclm.es","Calle de la Universidad, 1, 13071 Ciudad Real, España");
                 user.EmailConfirmed = true;
 
                 var result = userManager.CreateAsync(user, "Password1234%");
@@ -55,7 +55,7 @@ namespace AppForSEII.API.Data {
 
             if (userManager.FindByNameAsync("peter@uclm.es").Result == null) {
                 //A customer class has been defined because it has different attributes (purchase, rental, etc.)
-                ApplicationUser user = new ApplicationUser("3", "Peter", "Jackson", "peter@uclm.es");
+                Cliente user = new Cliente("3", "Peter", "Jackson", "peter@uclm.es","Calle de la Universidad, 1, 13071 Ciudad Real, España");
                 user.EmailConfirmed = true;
 
                 var result = userManager.CreateAsync(user, "OtherPass12$");
