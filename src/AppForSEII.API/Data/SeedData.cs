@@ -11,12 +11,19 @@ namespace AppForSEII.API.Data {
                 logger.LogError(ex, "An error occurred seeding the roles in the Database.");
             }
 
-            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<Cliente>>();
             try {
                 SeedUsers(userManager, rolesNames);
             }
             catch (Exception ex) {
                 logger.LogError(ex, "An error occurred seeding the Users in the Database.");
+            }
+
+           try {
+                seedImpresa3D(dbContext);
+            }
+            catch (Exception ex) {
+                logger.LogError(ex, "Ha ocurrido un error al sembrar las impresoras 3D en la base de datos.");
             }
 
  
@@ -37,10 +44,10 @@ namespace AppForSEII.API.Data {
 
         }
 
-        public static void SeedUsers(UserManager<ApplicationUser> userManager, List<string> roles) {
+        public static void SeedUsers(UserManager<Cliente> userManager, List<string> roles) {
             //first, it checks the user does not already exist in the DB
             if (userManager.FindByNameAsync("elena@uclm.es").Result == null) {
-                ApplicationUser user = new ApplicationUser("1", "Elena", "Navarro Martínez", "elena@uclm.es");
+                Cliente user = new ("1", "Elena", "Navarro Martínez", "elena@uclm.es","Calle de la Universidad, 1, 13071 Ciudad Real, España");
                 user.EmailConfirmed = true;
 
                 var result = userManager.CreateAsync(user, "Password1234%");
@@ -55,7 +62,7 @@ namespace AppForSEII.API.Data {
 
             if (userManager.FindByNameAsync("peter@uclm.es").Result == null) {
                 //A customer class has been defined because it has different attributes (purchase, rental, etc.)
-                ApplicationUser user = new ApplicationUser("3", "Peter", "Jackson", "peter@uclm.es");
+                Cliente user = new Cliente("3", "Peter", "Jackson", "peter@uclm.es","Calle de la Universidad, 1, 13071 Ciudad Real, España");
                 user.EmailConfirmed = true;
 
                 var result = userManager.CreateAsync(user, "OtherPass12$");
@@ -69,6 +76,19 @@ namespace AppForSEII.API.Data {
                 }
             }
 
+        }
+
+        public static void seedImpresa3D(ApplicationDbContext dbContext) {
+            if (!dbContext.Impresora3Ds.Any()) {
+                var impresoras = new List<Impresora3D> {
+                    new Impresora3D { Id = 1, Nombre = "Impresora 3D A", Modelo = "Modelo A" , Descripcion = "Impresora 3D de alta calidad para prototipos y producción en serie.", Tipo = TipoImpresora.Filamento, PrecioKilovatioHora = 0.15m, PrecioReserva = 10.00m },
+                    new Impresora3D { Id = 2, Nombre = "Impresora 3D B", Modelo = "Modelo B", Descripcion = "Impresora 3D de resina para detalles finos y acabados suaves.", Tipo = TipoImpresora.Resina, PrecioKilovatioHora = 0.20m, PrecioReserva = 15.00m },
+                    new Impresora3D { Id = 3, Nombre = "Impresora 3D C", Modelo = "Modelo C", Descripcion = "Impresora 3D de bajo costo para uso educativo.", Tipo = TipoImpresora.Filamento, PrecioKilovatioHora = 0.10m, PrecioReserva = 5.00m }
+                };
+
+                dbContext.Impresora3Ds.AddRange(impresoras);
+                dbContext.SaveChanges();
+            }
         }
 
 
