@@ -10,6 +10,7 @@ public class Cliente : ApplicationUser
     {
         DireccionFacturacion = direccionFacturacion;
     }
+    [Required,StringLength(100,ErrorMessage = "La dirección de facturación no puede superar los 100 caracteres")]
     public string DireccionFacturacion {get;set;}
 }
     

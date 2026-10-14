@@ -26,7 +26,9 @@ public class LineaReserva
 
     public int Impresora3DId { get; set; }
     public Impresora3D Impresora { get; set; }
-
+    [ForeignKey(nameof(ReservaImpresora))]
     public int ReservaImpresoraId { get; set; }
+    [Required]
     public ReservaImpresora ReservaImpresora { get; set; }
+    
 }

@@ -25,6 +25,7 @@ public class Impresora3D
     [Precision(10,2)]
     public decimal PrecioReserva { get; set; }
 
+    [Required]
     public IList<LineaReserva> LineasReserva { get; set; }
 }
 
