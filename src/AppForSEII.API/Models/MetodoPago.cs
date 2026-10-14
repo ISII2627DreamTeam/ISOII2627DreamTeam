@@ -1,8 +1,8 @@
-namespace APPForSEII.API.Models;
+namespace AppForSEII.API.Models;
 
 public enum MetodoPago
 {
     TarjetaCredito,
     PayPal,
-    Bizum
+    Bizum,
 }
