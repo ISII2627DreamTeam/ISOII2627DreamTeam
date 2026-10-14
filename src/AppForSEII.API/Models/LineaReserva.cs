@@ -25,7 +25,7 @@ public class LineaReserva
     public decimal PrecioSubtotal { get; set; }
 
     public int Impresora3DId { get; set; }
-    public Impresora3D Impresora { get; set; }
+    //public Impresora3D Impresora { get; set; }
 
     public int ReservaImpresoraId { get; set; }
     public ReservaImpresora ReservaImpresora { get; set; }
