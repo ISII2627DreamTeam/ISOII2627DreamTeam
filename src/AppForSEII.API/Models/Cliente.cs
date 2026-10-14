@@ -10,6 +10,8 @@ public class Cliente : ApplicationUser
     {
         DireccionFacturacion = direccionFacturacion;
     }
+    [Required]
+    [StringLength(200)]
     public string DireccionFacturacion {get;set;}
 }
     
