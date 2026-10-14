@@ -7,9 +7,16 @@ public class LineaReserva
 {
     public LineaReserva()
     {
+        TiempoReserva = new TiempoReserva();
+        PrecioSubtotal = 0;
+        Impresora3DId = -1;
+        ReservaImpresoraId = -1;
+        Impresora = new Impresora3D();
+        ReservaImpresora = new ReservaImpresora();
     }
 
     public LineaReserva(int id, TiempoReserva tiempoReserva, decimal precioSubtotal, int impresora3DId, int reservaImpresoraId)
+    :this()
     {
         Id = id;
         TiempoReserva = tiempoReserva;

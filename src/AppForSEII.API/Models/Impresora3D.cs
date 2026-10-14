@@ -1,7 +1,20 @@
 namespace AppForSEII.API.Models;
 
 public class Impresora3D
-{public Impresora3D(string nombre, TipoImpresora tipo,String modelo, string descripcion, decimal precioKilovatioHora, decimal precioReserva )
+{
+    public Impresora3D()
+    {
+        LineasReserva = new List<LineaReserva>();
+        Nombre = string.Empty;
+        Modelo = string.Empty;
+        Tipo = TipoImpresora.Filamento;
+        Descripcion = string.Empty;
+        PrecioKilovatioHora = 0;
+        PrecioReserva = 0;
+    }
+    
+    
+    public Impresora3D(string nombre, TipoImpresora tipo,String modelo, string descripcion, decimal precioKilovatioHora, decimal precioReserva ):this()
     {
         Nombre = nombre;
         Tipo = tipo;
