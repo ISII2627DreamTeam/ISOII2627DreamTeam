@@ -11,7 +11,7 @@ namespace AppForSEII.API.Data {
                 logger.LogError(ex, "An error occurred seeding the roles in the Database.");
             }
 
-            var userManager = serviceProvider.GetRequiredService<UserManager<Cliente>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             try {
                 SeedUsers(userManager, rolesNames);
             }
@@ -44,7 +44,7 @@ namespace AppForSEII.API.Data {
 
         }
 
-        public static void SeedUsers(UserManager<Cliente> userManager, List<string> roles) {
+        public static void SeedUsers(UserManager<ApplicationUser> userManager, List<string> roles) {
             //first, it checks the user does not already exist in the DB
             if (userManager.FindByNameAsync("elena@uclm.es").Result == null) {
                 Cliente user = new ("1", "Elena", "Navarro Martínez", "elena@uclm.es","Calle de la Universidad, 1, 13071 Ciudad Real, España");
