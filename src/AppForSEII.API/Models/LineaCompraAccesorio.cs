@@ -16,6 +16,8 @@ public class LineaCompraAccesorio
         PrecioUnidad = precioUnidad;
         Subtotal = cantidad * precioUnidad; // Se calcula solo
     }
+    
+
     public int AccesorioId { get; set; }
 
     public Accesorio Accesorio { get; set; }
@@ -24,9 +26,15 @@ public class LineaCompraAccesorio
 
     public CompraAccesorios CompraAccesorios { get; set; }
 
+    [Required]
+    [Range(1, int.MaxValue)]
     public int Cantidad { get; set; }
 
+    [Required]
+    [Precision(8, 2)]
     public decimal PrecioUnidad { get; set; }
 
+    [Required]
+    [Precision(10, 2)]
     public decimal Subtotal { get; set; }
 }
