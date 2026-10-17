@@ -18,20 +18,33 @@ public class CompraAccesorios
         PrecioTotal = precioTotal;
     }
 
+    [Key]
     public int Id { get; set; }
 
+    [Required]
     public DateTime FechaCompra { get; set; }
 
+    [Required]
+    [StringLength(100)]
     public string NombreCliente { get; set; }
 
+    [Required]
+    [StringLength(100)]
     public string ApellidosCliente { get; set; }
 
+    [Required]
+    [StringLength(200)]
     public string DireccionEnvio { get; set; }
 
+    [Required]
+    [StringLength(20)]
     public string NumeroTelefono { get; set; }
 
+    [Required]
     public MetodoPago MetodoPago { get; set; }
 
+    [Required]
+    [Precision(10, 2)]
     public decimal PrecioTotal { get; set; }
     
     public IList<LineaCompraAccesorio> LineasCompra { get; set; } = new List<LineaCompraAccesorio>();

@@ -18,16 +18,26 @@ public class Accesorio
         Precio = precio;
     }
 
+    [Key]
     public int Id { get; set; }
 
+    [Required]
+    [StringLength(100)]
     public string Nombre { get; set; }
 
+    [Required]
     public CategoriaAccesorio Categoria { get; set; }
 
+    [Required]
+    [StringLength(100)]
     public string Compatibilidad { get; set; }
 
+    [Required]
+    [Range(0, int.MaxValue)]
     public int CantidadDisponible { get; set; }
 
+    [Required]
+    [Precision(8, 2)]
     public decimal Precio { get; set; }
 
     public IList<LineaCompraAccesorio> LineasCompra { get; set; } = new List<LineaCompraAccesorio>();
