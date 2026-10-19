@@ -3,7 +3,7 @@ namespace AppForSEII.API.Models;
 
 public class CompraModelo3D
 {
-
+    public CompraModelo3D() { }
     public CompraModelo3D(int id, DateTime fechaCompra, string nombreCliente, string apellidosCliente, string correoElectronico, string direccionFacturacion, string? descripcion, decimal precioTotal, MetodoPago metodoPago)
 {
     Id = id;
@@ -16,13 +16,27 @@ public class CompraModelo3D
     PrecioTotal = precioTotal;
     MetodoPago = metodoPago;
 }
-
+    [Key]
     public int Id { get; set; }
     public DateTime FechaCompra { get; set; }
+
+    [Required]
+    [StringLength(100)]
     public string NombreCliente { get; set; }
+
+    [Required]
+    [StringLength(150)]
     public string ApellidosCliente { get; set; }
+
+    [Required]
+    [StringLength(150)]
     public string CorreoElectronico { get; set; }
+
+    [Required]
+    [StringLength(200)]
     public string DireccionFacturacion { get; set; }
+
+    [StringLength(500)]
     public string? Descripcion { get; set; }
     public decimal PrecioTotal { get; set; }
 
