@@ -5,16 +5,22 @@ namespace AppForSEII.API.Models;
 [PrimaryKey(nameof(AccesorioId), nameof(CompraAccesoriosId))]
 public class LineaCompraAccesorio
 {
-    public LineaCompraAccesorio() 
-    { 
-    }
-    public LineaCompraAccesorio(int accesorioId, int compraAccesoriosId, int cantidad, decimal precioUnidad)
+    public LineaCompraAccesorio()
     {
-        AccesorioId = accesorioId;
-        CompraAccesoriosId = compraAccesoriosId;
+        Accesorio = new Accesorio();
+        CompraAccesorios = new CompraAccesorios();
+        AccesorioId = -1;
+        CompraAccesoriosId = -1;
+    }
+    public LineaCompraAccesorio(Accesorio accesorio, CompraAccesorios compraAccesorios, int cantidad, decimal precioUnidad) : this()
+    {
+        AccesorioId = accesorio.Id;
+        Accesorio = accesorio;
+        CompraAccesoriosId = compraAccesorios.Id;
+        CompraAccesorios = compraAccesorios;
         Cantidad = cantidad;
         PrecioUnidad = precioUnidad;
-        Subtotal = cantidad * precioUnidad; // Se calcula solo
+        Subtotal = cantidad * precioUnidad;
     }
     
 

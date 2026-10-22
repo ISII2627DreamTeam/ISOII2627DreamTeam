@@ -1,12 +1,15 @@
 namespace AppForSEII.API.Models;
-
 public class CompraAccesorios
 {
     public CompraAccesorios()
     {
+        NombreCliente = string.Empty;
+        ApellidosCliente = string.Empty;
+        DireccionEnvio = string.Empty;
+        NumeroTelefono = string.Empty;
     }
 
-    public CompraAccesorios(int id, string nombreCliente, string apellidosCliente, string direccionEnvio, string numeroTelefono, DateTime fechaCompra, MetodoPago metodoPago, decimal precioTotal)
+    public CompraAccesorios(int id, string nombreCliente, string apellidosCliente, string direccionEnvio, string numeroTelefono, DateTime fechaCompra, MetodoPago metodoPago, decimal precioTotal) : this()
     {
         Id = id;
         NombreCliente = nombreCliente;

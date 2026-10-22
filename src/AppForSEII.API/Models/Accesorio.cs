@@ -5,10 +5,12 @@ public class Accesorio
 {
     public Accesorio()
     {
+        Nombre = string.Empty;
+        Compatibilidad = string.Empty;
     }
 
     public Accesorio(int id, string nombre, CategoriaAccesorio categoria, string compatibilidad, 
-        int cantidadDisponible, decimal precio)
+        int cantidadDisponible, decimal precio) : this()
     {
         Id = id;
         Nombre = nombre;
