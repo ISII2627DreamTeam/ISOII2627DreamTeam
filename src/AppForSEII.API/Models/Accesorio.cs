@@ -5,10 +5,12 @@ public class Accesorio
 {
     public Accesorio()
     {
+        Nombre = string.Empty;
+        Compatibilidad = string.Empty;
     }
 
     public Accesorio(int id, string nombre, CategoriaAccesorio categoria, string compatibilidad, 
-        int cantidadDisponible, decimal precio)
+        int cantidadDisponible, decimal precio) : this()
     {
         Id = id;
         Nombre = nombre;
@@ -18,16 +20,26 @@ public class Accesorio
         Precio = precio;
     }
 
+    [Key]
     public int Id { get; set; }
 
+    [Required]
+    [StringLength(100)]
     public string Nombre { get; set; }
 
+    [Required]
     public CategoriaAccesorio Categoria { get; set; }
 
+    [Required]
+    [StringLength(100)]
     public string Compatibilidad { get; set; }
 
+    [Required]
+    [Range(0, int.MaxValue)]
     public int CantidadDisponible { get; set; }
 
+    [Required]
+    [Precision(8, 2)]
     public decimal Precio { get; set; }
 
     public IList<LineaCompraAccesorio> LineasCompra { get; set; } = new List<LineaCompraAccesorio>();
