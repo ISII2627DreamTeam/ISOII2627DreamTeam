@@ -2,25 +2,33 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AppForSEII.API.Models;
 
-[PrimaryKey(nameof(Modelo3DId), nameof(CompraModelo3DId))]
+[PrimaryKey(nameof(Modelo3DID), nameof(CompraModelo3DID))]
 public class LineaCompraModelo
 {
-    public LineaCompraModelo() { }
+    public LineaCompraModelo() 
+    { 
+        Modelo3D = new Modelo3D();
+        CompraModelo3D = new CompraModelo3D();
+    }
 
-    public LineaCompraModelo(int modelo3DId, int compraModelo3DId, int cantidadLicencias, decimal precioUnidad)
+    public LineaCompraModelo(Modelo3D modelo3D, CompraModelo3D compraModelo3D, int cantidadLicencias, decimal precioUnidad) : this()
     {
-        Modelo3DId = modelo3DId;
-        CompraModelo3DId = compraModelo3DId;
+
+        Modelo3DID = modelo3D.Id;
+        CompraModelo3DID = compraModelo3D.Id;
+        
+        Modelo3D = modelo3D;
+        CompraModelo3D = compraModelo3D;
+        
         CantidadLicencias = cantidadLicencias;
         PrecioUnidad = precioUnidad;
-        Subtotal = cantidadLicencias * precioUnidad; // Calculado el subtotal sin hacer nada.
+        Subtotal = cantidadLicencias * precioUnidad; 
     }
-    public int Modelo3DId { get; set; }
+
+    public int Modelo3DID { get; set; }
+    public int CompraModelo3DID { get; set; }
 
     public Modelo3D Modelo3D { get; set; }
-
-    public int CompraModelo3DId { get; set; }
-
     public CompraModelo3D CompraModelo3D { get; set; }
 
     [Required]
