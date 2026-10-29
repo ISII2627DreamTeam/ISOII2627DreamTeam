@@ -2,9 +2,13 @@ namespace AppForSEII.API.Models;
 
 public class Modelo3D
 {
-    public Modelo3D() { }
+    public Modelo3D()
+    {
+        Nombre = string.Empty;
+        Categoría = string.Empty;
+    }
 
-    public Modelo3D(int id, string nombre, string categoría, FormatoModelo3D formato, decimal precio)
+    public Modelo3D(int id, string nombre, string categoría, FormatoModelo3D formato, decimal precio) : this()
     {
         Id = id;
         Nombre = nombre;

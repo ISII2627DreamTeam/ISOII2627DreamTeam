@@ -5,11 +5,15 @@ public class LicenciaModelo3D
 
 {
 
-    public LicenciaModelo3D() { }
+    public LicenciaModelo3D()
+    {
+        Nombre = string.Empty;
+        Modelo3D = new Modelo3D();
+    }
 
    
 
-    public LicenciaModelo3D(int id, string nombre, DateTime fechaExpiracion, int modelo3DId)
+    public LicenciaModelo3D(int id, string nombre, DateTime fechaExpiracion, Modelo3D modelo3D) : this()
 
     {
 
@@ -19,7 +23,8 @@ public class LicenciaModelo3D
 
         FechaExpiracion = fechaExpiracion;
 
-        Modelo3DId = modelo3DId; 
+        Modelo3DId = modelo3D.Id; 
+        Modelo3D = modelo3D;
 
     }
 

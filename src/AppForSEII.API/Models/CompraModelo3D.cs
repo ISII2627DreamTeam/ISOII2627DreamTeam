@@ -3,8 +3,14 @@ namespace AppForSEII.API.Models;
 
 public class CompraModelo3D
 {
-    public CompraModelo3D() { }
-    public CompraModelo3D(int id, DateTime fechaCompra, string nombreCliente, string apellidosCliente, string correoElectronico, string direccionFacturacion, string? descripcion, decimal precioTotal, MetodoPago metodoPago)
+    public CompraModelo3D()
+    {
+        NombreCliente = string.Empty;
+        ApellidosCliente = string.Empty;
+        CorreoElectronico = string.Empty;
+        DireccionFacturacion = string.Empty;
+    }
+    public CompraModelo3D(int id, DateTime fechaCompra, string nombreCliente, string apellidosCliente, string correoElectronico, string direccionFacturacion, string? descripcion, decimal precioTotal, MetodoPago metodoPago) : this()
 {
     Id = id;
     FechaCompra = fechaCompra;
