@@ -4,6 +4,19 @@ namespace AppForSEII.API.Models;
 
 public class Material
 {
+    public Material()
+    {
+        Nombre = string.Empty;
+    }
+
+    public Material(int id, string nombre, decimal precioPorGramo, decimal stockGramos)
+    {
+        Id = id;
+        Nombre = nombre;
+        PrecioPorGramo = precioPorGramo;
+        StockGramos = stockGramos;
+    }
+
     public int Id { get; set; }
     public string Nombre { get; set; }
     public decimal PrecioPorGramo { get; set; }
