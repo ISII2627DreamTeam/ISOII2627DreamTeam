@@ -3,6 +3,7 @@ using AppForSEII.API.DTOs.EncargoImpresionDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using AppForSEII.API.DTOs.EncargoParaCrearDTOs;
 
 namespace AppForSEII.API.Controllers
 {
@@ -39,5 +40,71 @@ namespace AppForSEII.API.Controllers
 
             return Ok(piezas);
         }
+
+        // POST: api/Encargos
+    [HttpPost]
+    public async Task<ActionResult<EncargoParaCrearDTO>> PostEncargoImpresion(EncargoParaCrearDTO encargoDTO)
+    {
+        if (encargoDTO == null || encargoDTO.LineasEncargo == null || !encargoDTO.LineasEncargo.Any())
+        {
+            return BadRequest("El encargo debe contener al menos una línea.");
+        }
+
+        var encargo = new EncargoImpresion
+        {
+            NombreCliente = encargoDTO.NombreCliente,
+            ApellidosCliente = encargoDTO.ApellidosCliente,
+            DireccionEnvio = encargoDTO.DireccionEnvio,
+            NumeroTelefono = encargoDTO.NumeroTelefono,
+            Descripcion = encargoDTO.Descripcion,
+            MetodoPago = encargoDTO.MetodoPago,
+            FechaEncargo = DateTime.Now,
+            LineasEncargo = new List<LineaEncargo>()
+        };
+
+        decimal precioTotal = 0;
+
+        foreach (var lineaDTO in encargoDTO.LineasEncargo)
+        {
+            var pieza = await _context.Piezas3D
+                .Include(p => p.MaterialesValidos)
+                .FirstOrDefaultAsync(p => p.Id == lineaDTO.PiezaId);
+
+            if (pieza == null)
+            {
+                return BadRequest($"La pieza con ID {lineaDTO.PiezaId} no existe.");
+            }
+
+            var material = await _context.Materiales
+                .FirstOrDefaultAsync(m => m.Id == lineaDTO.MaterialId);
+
+            if (material == null)
+            {
+                return BadRequest($"El material con ID {lineaDTO.MaterialId} no existe.");
+            }
+
+            decimal precioUnidad = pieza.Peso * material.PrecioPorGramo;
+            decimal subtotal = precioUnidad * lineaDTO.Cantidad;
+            precioTotal += subtotal;
+
+            var lineaEncargo = new LineaEncargo
+            {
+                PiezaId = pieza.Id,
+                MaterialId = material.Id,
+                Cantidad = lineaDTO.Cantidad,
+                PrecioUnidad = precioUnidad,
+                Subtotal = subtotal
+            };
+
+            encargo.LineasEncargo.Add(lineaEncargo);
+        }
+
+        encargo.PrecioTotal = precioTotal;
+
+        _context.EncargosImpresion.Add(encargo);
+        await _context.SaveChangesAsync();
+
+        return CreatedAtAction(nameof(PostEncargoImpresion), new { id = encargo.Id }, encargoDTO);
+    }
     }
 }
