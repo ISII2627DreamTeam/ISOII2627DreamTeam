@@ -25,6 +25,18 @@ namespace AppForSEII.API.Data {
             catch (Exception ex) {
                 logger.LogError(ex, "Ha ocurrido un error al sembrar las impresoras 3D en la base de datos.");
             }
+            try {
+                seedModelos3D(dbContext);
+            }
+            catch (Exception ex) {
+                logger.LogError(ex, "Ha ocurrido un error al sembrar los modelos 3D en la base de datos.");
+            }
+            try {
+                seedLicenciasModelo3D(dbContext);
+            }
+            catch (Exception ex) {
+                logger.LogError(ex, "Ha ocurrido un error al sembrar las licencias de los modelos 3D en la base de datos.");
+            }
 
  
 
@@ -88,6 +100,39 @@ namespace AppForSEII.API.Data {
 
                 dbContext.Impresora3Ds.AddRange(impresoras);
                 dbContext.SaveChanges();
+            }
+        }
+
+        public static void seedModelos3D(ApplicationDbContext dbContext) {
+            if (!dbContext.Modelos3D.Any()) {
+                var modelos3D = new List<Modelo3D> {
+                    new Modelo3D { Id = 1, Nombre = "Modelo 3D A", Categoría = "Juguetes", Formato = FormatoModelo3D.STL, Precio = 5.99m },
+                    new Modelo3D { Id = 2, Nombre = "Modelo 3D B", Categoría = "Oficina", Formato = FormatoModelo3D.OBJ, Precio = 2.50m },
+                    new Modelo3D { Id = 3, Nombre = "Modelo 3D C", Categoría = "Mecánica", Formato = FormatoModelo3D.TresMF, Precio = 12.00m }
+                };
+
+                dbContext.Modelos3D.AddRange(modelos3D);
+                dbContext.SaveChanges();
+            }
+        }
+
+        public static void seedLicenciasModelo3D(ApplicationDbContext dbContext) {
+            if (!dbContext.LicenciasModelo3D.Any()) {
+                
+                var modelo1 = dbContext.Modelos3D.FirstOrDefault(m => m.Id == 1);
+                var modelo2 = dbContext.Modelos3D.FirstOrDefault(m => m.Id == 2);
+                var modelo3 = dbContext.Modelos3D.FirstOrDefault(m => m.Id == 3);
+
+                if (modelo1 != null && modelo2 != null && modelo3 != null) {
+                    var licencias = new List<LicenciaModelo3D> {
+                        new LicenciaModelo3D(1, "Licencia 3D A", DateTime.Now.AddYears(1), modelo1),
+                        new LicenciaModelo3D(2, "Licencia 3D B", DateTime.Now.AddYears(3), modelo2),
+                        new LicenciaModelo3D(3, "Licencia 3D C", DateTime.Now.AddYears(5), modelo3)
+                    };
+
+                    dbContext.LicenciasModelo3D.AddRange(licencias);
+                    dbContext.SaveChanges();
+                }
             }
         }
 
