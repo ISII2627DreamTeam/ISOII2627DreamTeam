@@ -24,7 +24,7 @@ namespace AppForSEII.API.Controllers
 
         [HttpGet] 
         [Route("[action]")] 
-        [ProducesResponseType(typeof(CompraAccesorioDetailDTO), (int)HttpStatusCode.OK)] 
+        [ProducesResponseType(typeof(CompraAccesorioDTO), (int)HttpStatusCode.OK)] 
         [ProducesResponseType((int)HttpStatusCode.NotFound)] 
         public async Task<IActionResult> GetCompraAccesorio(int id) 
         { 
@@ -32,7 +32,7 @@ namespace AppForSEII.API.Controllers
                 .Include(c => c.LineasCompra) 
                     .ThenInclude(l => l.Accesorio) 
                 .Where(c => c.Id == id)
-                .Select(c => new CompraAccesorioDetailDTO(c)) 
+                .Select(c => new CompraAccesorioDTO(c)) 
                 .FirstOrDefaultAsync(); 
 
             if (compraDto == null) 
@@ -42,7 +42,7 @@ namespace AppForSEII.API.Controllers
             } 
 
             return Ok(compraDto); 
-        } 
+        }
 
         [HttpPost]
         [Route("[action]")]
