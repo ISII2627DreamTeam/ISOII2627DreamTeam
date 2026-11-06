@@ -11,6 +11,11 @@ namespace AppForSEII.API.DTOs.CompraAccesoriosDTOs
         [Range(1, int.MaxValue)]
         public int Cantidad { get; set; }
 
+        public LineaCompraAccesorioForCreateDTO()
+        {
+            AccesorioId = 0;
+            Cantidad = 0;
+        }
         public LineaCompraAccesorioForCreateDTO(int accesorioId, int cantidad)
         {
             AccesorioId = accesorioId;

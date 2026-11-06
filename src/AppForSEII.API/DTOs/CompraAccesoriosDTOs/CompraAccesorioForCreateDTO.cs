@@ -28,6 +28,15 @@ namespace AppForSEII.API.DTOs.CompraAccesoriosDTOs
         [Required]
         public List<LineaCompraAccesorioForCreateDTO> Lineas { get; set; }
 
+        public CompraAccesorioForCreateDTO()
+        {
+            NombreCliente = string.Empty;
+            ApellidosCliente = string.Empty;
+            DireccionEnvio = string.Empty;
+            NumeroTelefono = string.Empty;
+            Lineas = new List<LineaCompraAccesorioForCreateDTO>();
+        }
+
         public CompraAccesorioForCreateDTO(string nombreCliente, string apellidosCliente, string direccionEnvio, string numeroTelefono, MetodoPago metodoPago, List<LineaCompraAccesorioForCreateDTO> lineas)
         {
             NombreCliente = nombreCliente;
