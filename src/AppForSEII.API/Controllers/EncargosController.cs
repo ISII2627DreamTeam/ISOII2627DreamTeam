@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using AppForSEII.API.DTOs.EncargoParaCrearDTOs;
+using AppForSEII.API.DTOs.PiezaDetalleDTOs;
 
 namespace AppForSEII.API.Controllers
 {
@@ -137,5 +138,37 @@ namespace AppForSEII.API.Controllers
         // 5. Devolver 201 Created
         return CreatedAtAction(nameof(PostEncargoImpresion), new { id = encargo.Id }, encargoDTO);
     }
+    // GET: api/Encargos/GetPiezaDetalle
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(PiezaDetalleDTO), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetPiezaDetalle(int id)
+        {
+            var piezaDetalleDTO = await _context.Piezas3D
+                .Include(p => p.MaterialesValidos)
+                .Where(p => p.Id == id)
+                .Select(p => new PiezaDetalleDTO(
+                    p.Id,
+                    p.Nombre,
+                    p.Peso,
+                    p.Categoria,
+                    p.MaterialesValidos.Select(m => new MaterialParaDetalleDTO(
+                        m.Id,
+                        m.Nombre,
+                        m.PrecioPorGramo,
+                        m.StockGramos
+                    )).ToList()
+                ))
+                .FirstOrDefaultAsync();
+
+            if (piezaDetalleDTO == null)
+            {
+                _logger.LogError($"Error: Pieza3D with id {id} does not exist");
+                return NotFound();
+            }
+
+            return Ok(piezaDetalleDTO);
+        }
     }
 }
