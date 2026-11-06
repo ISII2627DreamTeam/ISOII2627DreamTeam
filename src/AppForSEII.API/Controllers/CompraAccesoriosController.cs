@@ -68,7 +68,7 @@ namespace AppForSEII.API.Controllers
                 compraForCreate.NumeroTelefono, 
                 DateTime.Now, 
                 compraForCreate.MetodoPago, 
-                0m
+                0m 
             );
 
             decimal precioTotalCalculado = 0;
