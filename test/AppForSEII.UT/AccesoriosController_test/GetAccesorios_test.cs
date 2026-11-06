@@ -44,7 +44,7 @@ namespace AppForSEII.UT.AccesoriosController_test
             var allTests = new List<object?[]> {
                 new object?[] { null, null, TC1WithOutFilters },
                 new object?[] { "Boquilla", null, TC2NombreFilter },
-                new object?[] { null, "BasesImpresion", TC3CategoriaFilter },
+                new object?[] { null, "BasesDeImpresion", TC3CategoriaFilter },
                 new object?[] { "Alicates", "Herramientas", TC4BothFilters }
             };
 
