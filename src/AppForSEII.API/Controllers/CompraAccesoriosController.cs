@@ -32,7 +32,6 @@ namespace AppForSEII.API.Controllers
                 .Include(c => c.LineasCompra) 
                     .ThenInclude(l => l.Accesorio) 
                 .Where(c => c.Id == id)
-                // Se simplifica el mapeo llamando directamente al constructor del DTO
                 .Select(c => new CompraAccesorioDetailDTO(c)) 
                 .FirstOrDefaultAsync(); 
 
@@ -45,6 +44,67 @@ namespace AppForSEII.API.Controllers
             return Ok(compraDto); 
         } 
 
-        // POST AQUI 
+        [HttpPost]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(CompraAccesorioDetailDTO), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> CreateCompraAccesorio(CompraAccesorioForCreateDTO compraForCreate)
+        {
+            if (compraForCreate.Lineas == null || !compraForCreate.Lineas.Any())
+            {
+                ModelState.AddModelError("Lineas", "La compra debe incluir al menos un accesorio.");
+            }
+
+            if (ModelState.ErrorCount > 0)
+            {
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
+
+            var nuevaCompra = new CompraAccesorios(
+                0, 
+                compraForCreate.NombreCliente, 
+                compraForCreate.ApellidosCliente, 
+                compraForCreate.DireccionEnvio, 
+                compraForCreate.NumeroTelefono, 
+                DateTime.Now, 
+                compraForCreate.MetodoPago, 
+                0m
+            );
+
+            decimal precioTotalCalculado = 0;
+
+            foreach (var lineaDto in compraForCreate.Lineas!)
+            {
+                var accesorio = await _context.Accesorios.FindAsync(lineaDto.AccesorioId);
+                
+                if (accesorio == null)
+                {
+                    ModelState.AddModelError("Accesorio", $"El accesorio con id {lineaDto.AccesorioId} no existe.");
+                    return BadRequest(new ValidationProblemDetails(ModelState));
+                }
+
+                if (accesorio.CantidadDisponible < lineaDto.Cantidad)
+                {
+                    ModelState.AddModelError("Stock", $"No hay stock suficiente para el accesorio {accesorio.Nombre}.");
+                    return BadRequest(new ValidationProblemDetails(ModelState));
+                }
+
+                var nuevaLinea = new LineaCompraAccesorio(accesorio, nuevaCompra, lineaDto.Cantidad, accesorio.Precio);
+                
+                nuevaCompra.LineasCompra.Add(nuevaLinea);
+                
+                accesorio.CantidadDisponible -= lineaDto.Cantidad;
+                precioTotalCalculado += nuevaLinea.Subtotal;
+            }
+
+            nuevaCompra.PrecioTotal = precioTotalCalculado;
+
+            _context.ComprasAccesorios.Add(nuevaCompra);
+            await _context.SaveChangesAsync();
+
+            var compraDetailDto = new CompraAccesorioDetailDTO(nuevaCompra);
+
+            return CreatedAtAction(nameof(GetCompraAccesorio), new { id = nuevaCompra.Id }, compraDetailDto);
+        }
     } 
 }
