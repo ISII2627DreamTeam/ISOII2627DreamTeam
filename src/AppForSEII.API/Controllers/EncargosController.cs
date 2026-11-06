@@ -41,15 +41,22 @@ namespace AppForSEII.API.Controllers
             return Ok(piezas);
         }
 
-        // POST: api/Encargos
+// POST: api/Encargos
     [HttpPost]
+    [Route("[action]")]
+    [ProducesResponseType(typeof(EncargoParaCrearDTO), (int)HttpStatusCode.Created)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
     public async Task<ActionResult<EncargoParaCrearDTO>> PostEncargoImpresion(EncargoParaCrearDTO encargoDTO)
     {
-        if (encargoDTO == null || encargoDTO.LineasEncargo == null || !encargoDTO.LineasEncargo.Any())
+        // 1. Validar que el DTO contenga líneas de encargo
+        if (encargoDTO.LineasEncargo == null || !encargoDTO.LineasEncargo.Any())
         {
-            return BadRequest("El encargo debe contener al menos una línea.");
+            ModelState.AddModelError("LineasEncargo", "Error! El encargo debe contener al menos una pieza para imprimir.");
+            return BadRequest(new ValidationProblemDetails(ModelState));
         }
 
+        // 2. Mapear el DTO al modelo de base de datos (EncargoImpresion)
         var encargo = new EncargoImpresion
         {
             NombreCliente = encargoDTO.NombreCliente,
@@ -64,6 +71,7 @@ namespace AppForSEII.API.Controllers
 
         decimal precioTotal = 0;
 
+        // 3. Procesar cada línea validando piezas y que el material sea válido para esa pieza
         foreach (var lineaDTO in encargoDTO.LineasEncargo)
         {
             var pieza = await _context.Piezas3D
@@ -72,17 +80,30 @@ namespace AppForSEII.API.Controllers
 
             if (pieza == null)
             {
-                return BadRequest($"La pieza con ID {lineaDTO.PiezaId} no existe.");
+                ModelState.AddModelError("PiezaId", $"Error! La pieza con ID {lineaDTO.PiezaId} no existe.");
+                continue;
             }
 
-            var material = await _context.Materiales
-                .FirstOrDefaultAsync(m => m.Id == lineaDTO.MaterialId);
+            // Buscar el material DENTRO de los materiales válidos de la pieza
+            var material = pieza.MaterialesValidos
+                .FirstOrDefault(m => m.Id == lineaDTO.MaterialId);
 
             if (material == null)
             {
-                return BadRequest($"El material con ID {lineaDTO.MaterialId} no existe.");
+                ModelState.AddModelError("MaterialId", $"Error! El material con ID {lineaDTO.MaterialId} no es válido para la pieza '{pieza.Nombre}'.");
+                continue;
             }
 
+            // Comprobar si hay suficiente stock en gramos para imprimir la cantidad pedida
+            decimal gramosNecesarios = pieza.Peso * lineaDTO.Cantidad;
+            if (material.StockGramos < gramosNecesarios)
+            {
+                ModelState.AddModelError("Cantidad", $"Error! No hay suficiente stock del material '{material.Nombre}' para imprimir {lineaDTO.Cantidad} unidades de '{pieza.Nombre}'.");
+                continue;
+            }
+
+            // Reducir el stock y calcular precios
+            material.StockGramos -= gramosNecesarios;
             decimal precioUnidad = pieza.Peso * material.PrecioPorGramo;
             decimal subtotal = precioUnidad * lineaDTO.Cantidad;
             precioTotal += subtotal;
@@ -90,7 +111,9 @@ namespace AppForSEII.API.Controllers
             var lineaEncargo = new LineaEncargo
             {
                 PiezaId = pieza.Id,
+                Pieza = pieza,
                 MaterialId = material.Id,
+                MaterialSeleccionado = material,
                 Cantidad = lineaDTO.Cantidad,
                 PrecioUnidad = precioUnidad,
                 Subtotal = subtotal
@@ -99,11 +122,19 @@ namespace AppForSEII.API.Controllers
             encargo.LineasEncargo.Add(lineaEncargo);
         }
 
+        // Si hubo algún error de validación en las líneas, devolvemos BadRequest
+        if (ModelState.ErrorCount > 0)
+        {
+            return BadRequest(new ValidationProblemDetails(ModelState));
+        }
+
         encargo.PrecioTotal = precioTotal;
 
+        // 4. Guardar en la base de datos
         _context.EncargosImpresion.Add(encargo);
         await _context.SaveChangesAsync();
 
+        // 5. Devolver 201 Created
         return CreatedAtAction(nameof(PostEncargoImpresion), new { id = encargo.Id }, encargoDTO);
     }
     }
