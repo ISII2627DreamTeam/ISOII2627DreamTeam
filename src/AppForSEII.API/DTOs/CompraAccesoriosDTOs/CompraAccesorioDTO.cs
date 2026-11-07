@@ -1,24 +1,52 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using AppForSEII.API.Models;
 
 namespace AppForSEII.API.DTOs.CompraAccesoriosDTOs
 {
-    public class CompraAccesorioDetailDTO
+    public class CompraAccesorioDTO
     {
         public int Id { get; set; }
         public DateTime FechaCompra { get; set; }
+
+        [Required]
+        [StringLength(100)]
         public string NombreCliente { get; set; }
+
+        [Required]
+        [StringLength(100)]
         public string ApellidosCliente { get; set; }
+
+        [Required]
+        [StringLength(200)]
         public string DireccionEnvio { get; set; }
+
+        [Required]
+        [StringLength(20)]
         public string NumeroTelefono { get; set; }
+
         public decimal PrecioTotal { get; set; }
+
+        [Required]
         public MetodoPago MetodoPago { get; set; }
+
+        [Required]
         public List<LineaCompraAccesorioDTO> Lineas { get; set; }
 
-        // El profesor pide pasar la entidad principal
-        public CompraAccesorioDetailDTO(CompraAccesorios compra)
+        // Constructor vacío (Obligatorio para recibir el POST)
+        public CompraAccesorioDTO() 
+        { 
+            NombreCliente = string.Empty;
+            ApellidosCliente = string.Empty;
+            DireccionEnvio = string.Empty;
+            NumeroTelefono = string.Empty;
+            Lineas = new List<LineaCompraAccesorioDTO>();
+        }
+
+        // Constructor desde entidad (Para el GET)
+        public CompraAccesorioDTO(CompraAccesorios compra)
         {
             Id = compra.Id;
             FechaCompra = compra.FechaCompra;
@@ -28,13 +56,12 @@ namespace AppForSEII.API.DTOs.CompraAccesoriosDTOs
             NumeroTelefono = compra.NumeroTelefono;
             PrecioTotal = compra.PrecioTotal;
             MetodoPago = compra.MetodoPago;
-            // Mapeamos la lista llamando al DTO de las líneas
             Lineas = compra.LineasCompra.Select(l => new LineaCompraAccesorioDTO(l)).ToList();
         }
 
         public override bool Equals(object? obj)
         {
-            return obj is CompraAccesorioDetailDTO dTO &&
+            return obj is CompraAccesorioDTO dTO &&
                    Id == dTO.Id &&
                    FechaCompra == dTO.FechaCompra &&
                    NombreCliente == dTO.NombreCliente &&

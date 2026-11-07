@@ -24,7 +24,7 @@ namespace AppForSEII.API.Controllers
 
         [HttpGet] 
         [Route("[action]")] 
-        [ProducesResponseType(typeof(CompraAccesorioDetailDTO), (int)HttpStatusCode.OK)] 
+        [ProducesResponseType(typeof(CompraAccesorioDTO), (int)HttpStatusCode.OK)] 
         [ProducesResponseType((int)HttpStatusCode.NotFound)] 
         public async Task<IActionResult> GetCompraAccesorio(int id) 
         { 
@@ -32,7 +32,7 @@ namespace AppForSEII.API.Controllers
                 .Include(c => c.LineasCompra) 
                     .ThenInclude(l => l.Accesorio) 
                 .Where(c => c.Id == id)
-                .Select(c => new CompraAccesorioDetailDTO(c)) 
+                .Select(c => new CompraAccesorioDTO(c)) 
                 .FirstOrDefaultAsync(); 
 
             if (compraDto == null) 
@@ -42,15 +42,15 @@ namespace AppForSEII.API.Controllers
             } 
 
             return Ok(compraDto); 
-        } 
+        }
 
         [HttpPost]
         [Route("[action]")]
-        [ProducesResponseType(typeof(CompraAccesorioDetailDTO), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(CompraAccesorioDTO), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> CreateCompraAccesorio(CompraAccesorioForCreateDTO compraForCreate)
+        public async Task<IActionResult> CreateCompraAccesorio(CompraAccesorioDTO compraDto)
         {
-            if (compraForCreate.Lineas == null || !compraForCreate.Lineas.Any())
+            if (compraDto.Lineas == null || !compraDto.Lineas.Any())
             {
                 ModelState.AddModelError("Lineas", "La compra debe incluir al menos un accesorio.");
             }
@@ -62,18 +62,18 @@ namespace AppForSEII.API.Controllers
 
             var nuevaCompra = new CompraAccesorios(
                 0, 
-                compraForCreate.NombreCliente, 
-                compraForCreate.ApellidosCliente, 
-                compraForCreate.DireccionEnvio, 
-                compraForCreate.NumeroTelefono, 
+                compraDto.NombreCliente, 
+                compraDto.ApellidosCliente, 
+                compraDto.DireccionEnvio, 
+                compraDto.NumeroTelefono, 
                 DateTime.Now, 
-                compraForCreate.MetodoPago, 
-                0m 
+                compraDto.MetodoPago, 
+                0m
             );
 
             decimal precioTotalCalculado = 0;
 
-            foreach (var lineaDto in compraForCreate.Lineas!)
+            foreach (var lineaDto in compraDto.Lineas!)
             {
                 var accesorio = await _context.Accesorios.FindAsync(lineaDto.AccesorioId);
                 
@@ -102,9 +102,9 @@ namespace AppForSEII.API.Controllers
             _context.ComprasAccesorios.Add(nuevaCompra);
             await _context.SaveChangesAsync();
 
-            var compraDetailDto = new CompraAccesorioDetailDTO(nuevaCompra);
+            var compraResultDto = new CompraAccesorioDTO(nuevaCompra);
 
-            return CreatedAtAction(nameof(GetCompraAccesorio), new { id = nuevaCompra.Id }, compraDetailDto);
+            return CreatedAtAction(nameof(GetCompraAccesorio), new { id = nuevaCompra.Id }, compraResultDto);
         }
     } 
 }

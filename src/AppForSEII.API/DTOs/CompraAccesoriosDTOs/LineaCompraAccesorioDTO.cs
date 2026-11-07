@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using AppForSEII.API.Models;
 
 namespace AppForSEII.API.DTOs.CompraAccesoriosDTOs
@@ -6,10 +7,22 @@ namespace AppForSEII.API.DTOs.CompraAccesoriosDTOs
     public class LineaCompraAccesorioDTO
     {
         public int AccesorioId { get; set; }
+        
         public string NombreAccesorio { get; set; }
+        
+        [Required]
+        [Range(1, int.MaxValue)]
         public int Cantidad { get; set; }
+        
         public decimal PrecioUnidad { get; set; }
         public decimal Subtotal { get; set; }
+
+        public LineaCompraAccesorioDTO() 
+        { 
+            NombreAccesorio = string.Empty;
+        }
+
+        // Constructor desde entidad (Para el GET)
         public LineaCompraAccesorioDTO(LineaCompraAccesorio linea)
         {
             AccesorioId = linea.AccesorioId;
