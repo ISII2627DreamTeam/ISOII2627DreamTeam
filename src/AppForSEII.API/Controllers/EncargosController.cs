@@ -28,14 +28,15 @@ namespace AppForSEII.API.Controllers
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(typeof(IList<PiezaParaEncargarDTO>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult> GetPiezasParaEncargar()
+        public async Task<IActionResult> GetPiezasParaEncargar(string? nombre, string? categoria)
         {
-            // Proyectamos de la entidad Pieza3D al DTO usando Select
             var piezas = await _context.Piezas3D
+                .Where(p => (string.IsNullOrEmpty(nombre) || p.Nombre.Contains(nombre)) &&
+                            (string.IsNullOrEmpty(categoria) || p.Categoria.ToString().Contains(categoria)))
                 .Select(p => new PiezaParaEncargarDTO(
                     p.Id, 
                     p.Nombre, 
-                    p.Categoria.ToString(), // Convertimos el Enum a string
+                    p.Categoria.ToString(),
                     p.Peso))
                 .ToListAsync();
 
