@@ -49,5 +49,45 @@ namespace AppForSEII.API.Controllers
                 // Ejecuta la consulta en SQL y lo convierte en una lista asíncrona para no bloquear el servidor mientras carga.
                 .ToListAsync());
         }
+        // GET: api/Modelos3D/GetModelo3D/5
+        [HttpGet]
+        [Route("[action]/{id}")]
+        [ProducesResponseType(typeof(Modelo3DDetailDTO), (int)System.Net.HttpStatusCode.OK)]
+        [ProducesResponseType((int)System.Net.HttpStatusCode.NotFound)]
+        public async Task<ActionResult> GetModelo3D(int id)
+        {
+            // Comprobamos que el contexto de base de datos no sea nulo por seguridad
+            if (_context.Modelos3D == null)
+            {
+                _logger.LogError("Error: La tabla Modelos3D no existe en la base de datos.");
+                return NotFound();
+            }
+
+            // Consultamos usando Eager Loading (.Include) para traernos las licencias asociadas
+            var modeloDetailDTO = await _context.Modelos3D
+                .Include(m => m.Licencias) 
+                .Where(m => m.Id == id) 
+                .Select(m => new Modelo3DDetailDTO(
+                    m.Id,
+                    m.Nombre,
+                    m.Categoría,
+                    m.Formato,
+                    m.Precio,
+                    // Mapeamos la lista de licencias elemento a elemento llamando a su constructor
+                    m.Licencias.Select(l => new LicenciaModelo3DDTO(l.Id, l.Nombre, l.FechaExpiracion)).ToList()
+                ))
+                .FirstOrDefaultAsync(); 
+
+            // Si el ID no existe en la base de datos, devolvemos un 404
+            if (modeloDetailDTO == null)
+            {
+                _logger.LogError($"Error: El modelo 3D con ID {id} no existe.");
+                return NotFound();
+            }
+
+            // Si todo va como la seda, devolvemos un 200 OK con el DTO mapeado
+            return Ok(modeloDetailDTO);
+        }
     }
+    
 }
