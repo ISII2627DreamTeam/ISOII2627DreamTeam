@@ -23,10 +23,9 @@ public class Impresora3D
         PrecioKilovatioHora = precioKilovatioHora;
         PrecioReserva = precioReserva;
     }
-    [Key]
     public int Id { get; set; }
 
-    [Required, StringLength(100)]
+    [Key]
     public string Nombre { get; set; }
 
     public TipoImpresora Tipo { get; set; }
