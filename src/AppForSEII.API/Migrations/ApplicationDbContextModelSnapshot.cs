@@ -22,6 +22,39 @@ namespace AppForSEII.API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("AppForSEII.API.Models.Accesorio", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CantidadDisponible")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Categoria")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Compatibilidad")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal>("Precio")
+                        .HasPrecision(8, 2)
+                        .HasColumnType("decimal(8,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Accesorios");
+                });
+
             modelBuilder.Entity("AppForSEII.API.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -104,6 +137,49 @@ namespace AppForSEII.API.Migrations
                     b.UseTphMappingStrategy();
                 });
 
+            modelBuilder.Entity("AppForSEII.API.Models.CompraAccesorios", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApellidosCliente")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("DireccionEnvio")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("FechaCompra")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MetodoPago")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NombreCliente")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NumeroTelefono")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<decimal>("PrecioTotal")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ComprasAccesorios");
+                });
+
             modelBuilder.Entity("AppForSEII.API.Models.CompraModelo3D", b =>
                 {
                     b.Property<int>("Id")
@@ -148,6 +224,54 @@ namespace AppForSEII.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ComprasModelo3D");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.EncargoImpresion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApellidosCliente")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClienteId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DireccionEnvio")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FechaEncargo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MetodoPago")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NombreCliente")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NumeroTelefono")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("PrecioTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClienteId");
+
+                    b.ToTable("EncargosImpresion");
                 });
 
             modelBuilder.Entity("AppForSEII.API.Models.Impresora3D", b =>
@@ -210,12 +334,38 @@ namespace AppForSEII.API.Migrations
                     b.ToTable("LicenciasModelo3D");
                 });
 
-            modelBuilder.Entity("AppForSEII.API.Models.LineaCompraModelo", b =>
+            modelBuilder.Entity("AppForSEII.API.Models.LineaCompraAccesorio", b =>
                 {
-                    b.Property<int>("Modelo3DId")
+                    b.Property<int>("AccesorioId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CompraModelo3DId")
+                    b.Property<int>("CompraAccesoriosId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("PrecioUnidad")
+                        .HasPrecision(8, 2)
+                        .HasColumnType("decimal(8,2)");
+
+                    b.Property<decimal>("Subtotal")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.HasKey("AccesorioId", "CompraAccesoriosId");
+
+                    b.HasIndex("CompraAccesoriosId");
+
+                    b.ToTable("LineasCompraAccesorio");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.LineaCompraModelo", b =>
+                {
+                    b.Property<int>("Modelo3DID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CompraModelo3DID")
                         .HasColumnType("int");
 
                     b.Property<int>("CantidadLicencias")
@@ -227,11 +377,40 @@ namespace AppForSEII.API.Migrations
                     b.Property<decimal>("Subtotal")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("Modelo3DId", "CompraModelo3DId");
+                    b.HasKey("Modelo3DID", "CompraModelo3DID");
 
-                    b.HasIndex("CompraModelo3DId");
+                    b.HasIndex("CompraModelo3DID");
 
                     b.ToTable("LineasCompraModelo");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.LineaEncargo", b =>
+                {
+                    b.Property<int>("EncargoImpresionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PiezaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaterialId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("PrecioUnidad")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Subtotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("EncargoImpresionId", "PiezaId");
+
+                    b.HasIndex("MaterialId");
+
+                    b.HasIndex("PiezaId");
+
+                    b.ToTable("LineasEncargo");
                 });
 
             modelBuilder.Entity("AppForSEII.API.Models.LineaReserva", b =>
@@ -264,6 +443,29 @@ namespace AppForSEII.API.Migrations
                     b.ToTable("LineaReservas");
                 });
 
+            modelBuilder.Entity("AppForSEII.API.Models.Material", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("PrecioPorGramo")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("StockGramos")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Materiales");
+                });
+
             modelBuilder.Entity("AppForSEII.API.Models.Modelo3D", b =>
                 {
                     b.Property<int>("Id")
@@ -291,6 +493,29 @@ namespace AppForSEII.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Modelos3D");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Pieza3D", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Categoria")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Peso")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Piezas3D");
                 });
 
             modelBuilder.Entity("AppForSEII.API.Models.ReservaImpresora", b =>
@@ -329,6 +554,21 @@ namespace AppForSEII.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ReservaImpresoras");
+                });
+
+            modelBuilder.Entity("MaterialPieza3D", b =>
+                {
+                    b.Property<int>("MaterialesValidosId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Piezas3DId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MaterialesValidosId", "Piezas3DId");
+
+                    b.HasIndex("Piezas3DId");
+
+                    b.ToTable("MaterialPieza3D");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -476,6 +716,17 @@ namespace AppForSEII.API.Migrations
                     b.HasDiscriminator().HasValue("Cliente");
                 });
 
+            modelBuilder.Entity("AppForSEII.API.Models.EncargoImpresion", b =>
+                {
+                    b.HasOne("AppForSEII.API.Models.Cliente", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cliente");
+                });
+
             modelBuilder.Entity("AppForSEII.API.Models.LicenciaModelo3D", b =>
                 {
                     b.HasOne("AppForSEII.API.Models.Modelo3D", "Modelo3D")
@@ -487,23 +738,69 @@ namespace AppForSEII.API.Migrations
                     b.Navigation("Modelo3D");
                 });
 
+            modelBuilder.Entity("AppForSEII.API.Models.LineaCompraAccesorio", b =>
+                {
+                    b.HasOne("AppForSEII.API.Models.Accesorio", "Accesorio")
+                        .WithMany("LineasCompra")
+                        .HasForeignKey("AccesorioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AppForSEII.API.Models.CompraAccesorios", "CompraAccesorios")
+                        .WithMany("LineasCompra")
+                        .HasForeignKey("CompraAccesoriosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Accesorio");
+
+                    b.Navigation("CompraAccesorios");
+                });
+
             modelBuilder.Entity("AppForSEII.API.Models.LineaCompraModelo", b =>
                 {
                     b.HasOne("AppForSEII.API.Models.CompraModelo3D", "CompraModelo3D")
                         .WithMany("LineasCompra")
-                        .HasForeignKey("CompraModelo3DId")
+                        .HasForeignKey("CompraModelo3DID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("AppForSEII.API.Models.Modelo3D", "Modelo3D")
                         .WithMany("LineasCompra")
-                        .HasForeignKey("Modelo3DId")
+                        .HasForeignKey("Modelo3DID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("CompraModelo3D");
 
                     b.Navigation("Modelo3D");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.LineaEncargo", b =>
+                {
+                    b.HasOne("AppForSEII.API.Models.EncargoImpresion", "EncargoImpresion")
+                        .WithMany("LineasEncargo")
+                        .HasForeignKey("EncargoImpresionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AppForSEII.API.Models.Material", "MaterialSeleccionado")
+                        .WithMany("LineasEncargo")
+                        .HasForeignKey("MaterialId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AppForSEII.API.Models.Pieza3D", "Pieza")
+                        .WithMany("LineasEncargo")
+                        .HasForeignKey("PiezaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EncargoImpresion");
+
+                    b.Navigation("MaterialSeleccionado");
+
+                    b.Navigation("Pieza");
                 });
 
             modelBuilder.Entity("AppForSEII.API.Models.LineaReserva", b =>
@@ -523,6 +820,21 @@ namespace AppForSEII.API.Migrations
                     b.Navigation("Impresora");
 
                     b.Navigation("ReservaImpresora");
+                });
+
+            modelBuilder.Entity("MaterialPieza3D", b =>
+                {
+                    b.HasOne("AppForSEII.API.Models.Material", null)
+                        .WithMany()
+                        .HasForeignKey("MaterialesValidosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AppForSEII.API.Models.Pieza3D", null)
+                        .WithMany()
+                        .HasForeignKey("Piezas3DId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -576,9 +888,24 @@ namespace AppForSEII.API.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("AppForSEII.API.Models.Accesorio", b =>
+                {
+                    b.Navigation("LineasCompra");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.CompraAccesorios", b =>
+                {
+                    b.Navigation("LineasCompra");
+                });
+
             modelBuilder.Entity("AppForSEII.API.Models.CompraModelo3D", b =>
                 {
                     b.Navigation("LineasCompra");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.EncargoImpresion", b =>
+                {
+                    b.Navigation("LineasEncargo");
                 });
 
             modelBuilder.Entity("AppForSEII.API.Models.Impresora3D", b =>
@@ -586,11 +913,21 @@ namespace AppForSEII.API.Migrations
                     b.Navigation("LineasReserva");
                 });
 
+            modelBuilder.Entity("AppForSEII.API.Models.Material", b =>
+                {
+                    b.Navigation("LineasEncargo");
+                });
+
             modelBuilder.Entity("AppForSEII.API.Models.Modelo3D", b =>
                 {
                     b.Navigation("Licencias");
 
                     b.Navigation("LineasCompra");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Pieza3D", b =>
+                {
+                    b.Navigation("LineasEncargo");
                 });
 
             modelBuilder.Entity("AppForSEII.API.Models.ReservaImpresora", b =>
