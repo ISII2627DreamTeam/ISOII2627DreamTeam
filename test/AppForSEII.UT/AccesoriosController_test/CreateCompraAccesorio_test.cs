@@ -27,25 +27,18 @@ namespace AppForSEII.UT.CompraAccesoriosController_test
             var mockLogger = new Mock<ILogger<CompraAccesoriosController>>();
             var controller = new CompraAccesoriosController(_context, mockLogger.Object);
 
-            var nuevaCompraDto = new CompraAccesorioDTO
-            {
-                NombreCliente = "Jose Miguel",
-                ApellidosCliente = "Martinez",
-                DireccionEnvio = "Avenida Avenidosa 456",
-                NumeroTelefono = "777888999",
-                MetodoPago = MetodoPago.PayPal,
-                Lineas = new List<LineaCompraAccesorioDTO>
-                {
-                    new LineaCompraAccesorioDTO { AccesorioId = 2, Cantidad = 3 } 
-                }
-            };
+            var lineasDto = new List<LineaCompraAccesorioDTO> { new LineaCompraAccesorioDTO(2, 3) };
+            var nuevaCompraDto = new CompraAccesorioDTO("Jose Miguel", "Martinez", "Avenida Avenidosa 456", "777888999", MetodoPago.PayPal, lineasDto, 0m);
 
             var result = await controller.CreateCompraAccesorio(nuevaCompraDto);
 
             var createdResult = Assert.IsType<CreatedAtActionResult>(result); 
             var resultDto = Assert.IsType<CompraAccesorioDTO>(createdResult.Value);
             
-            Assert.Equal(3 * 15.50m, resultDto.PrecioTotal); 
+            var lineasEsperadas = new List<LineaCompraAccesorioDTO> { new LineaCompraAccesorioDTO(2, "Cama de Cristal", 3, 15.50m, 46.50m) };
+            var compraEsperada = new CompraAccesorioDTO(resultDto.Id, resultDto.FechaCompra, "Jose Miguel", "Martinez", "Avenida Avenidosa 456", "777888999", MetodoPago.PayPal, lineasEsperadas, 46.50m);
+
+            Assert.Equal(compraEsperada, resultDto); 
             
             var accesorioActualizado = await _context.Accesorios.FindAsync(2);
             Assert.Equal(17, accesorioActualizado!.CantidadDisponible); 
@@ -57,15 +50,8 @@ namespace AppForSEII.UT.CompraAccesoriosController_test
             var mockLogger = new Mock<ILogger<CompraAccesoriosController>>();
             var controller = new CompraAccesoriosController(_context, mockLogger.Object);
 
-            var nuevaCompraDto = new CompraAccesorioDTO
-            {
-                NombreCliente = "Pedro",
-                ApellidosCliente = "Lopez",
-                DireccionEnvio = "Calle Falsa 123",
-                NumeroTelefono = "111222333",
-                MetodoPago = MetodoPago.Bizum,
-                Lineas = new List<LineaCompraAccesorioDTO>()
-            };
+            var lineasVacias = new List<LineaCompraAccesorioDTO>();
+            var nuevaCompraDto = new CompraAccesorioDTO("Pedro", "Lopez", "Calle Falsa 123", "111222333", MetodoPago.Bizum, lineasVacias, 0m);
 
             var result = await controller.CreateCompraAccesorio(nuevaCompraDto);
 
@@ -78,18 +64,8 @@ namespace AppForSEII.UT.CompraAccesoriosController_test
             var mockLogger = new Mock<ILogger<CompraAccesoriosController>>();
             var controller = new CompraAccesoriosController(_context, mockLogger.Object);
 
-            var nuevaCompraDto = new CompraAccesorioDTO
-            {
-                NombreCliente = "Maria",
-                ApellidosCliente = "Gomez",
-                DireccionEnvio = "Avenida Siempreviva 742",
-                NumeroTelefono = "987654321",
-                MetodoPago = MetodoPago.Bizum,
-                Lineas = new List<LineaCompraAccesorioDTO>
-                {
-                    new LineaCompraAccesorioDTO { AccesorioId = 2, Cantidad = 50 } 
-                }
-            };
+            var lineasSinStock = new List<LineaCompraAccesorioDTO> { new LineaCompraAccesorioDTO(2, 50) };
+            var nuevaCompraDto = new CompraAccesorioDTO("Maria", "Gomez", "Avenida Siempreviva 742", "987654321", MetodoPago.Bizum, lineasSinStock, 0m);
 
             var result = await controller.CreateCompraAccesorio(nuevaCompraDto);
 

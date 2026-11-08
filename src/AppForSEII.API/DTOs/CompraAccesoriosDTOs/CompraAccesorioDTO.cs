@@ -45,6 +45,32 @@ namespace AppForSEII.API.DTOs.CompraAccesoriosDTOs
             Lineas = new List<LineaCompraAccesorioDTO>();
         }
 
+        // Constructor para crear los datos de entrada del POST
+        public CompraAccesorioDTO(string nombreCliente, string apellidosCliente, string direccionEnvio, string numeroTelefono, MetodoPago metodoPago, List<LineaCompraAccesorioDTO> lineas, decimal precioTotal) 
+        {
+            NombreCliente = nombreCliente;
+            ApellidosCliente = apellidosCliente;
+            DireccionEnvio = direccionEnvio;
+            NumeroTelefono = numeroTelefono;
+            MetodoPago = metodoPago;
+            Lineas = lineas;
+            PrecioTotal = precioTotal;
+        }
+
+        // Constructor para comprobar el resultado exacto en los Assert
+        public CompraAccesorioDTO(int id, DateTime fechaCompra, string nombreCliente, string apellidosCliente, string direccionEnvio, string numeroTelefono, MetodoPago metodoPago, List<LineaCompraAccesorioDTO> lineas, decimal precioTotal) 
+        {
+            Id = id;
+            FechaCompra = fechaCompra;
+            NombreCliente = nombreCliente;
+            ApellidosCliente = apellidosCliente;
+            DireccionEnvio = direccionEnvio;
+            NumeroTelefono = numeroTelefono;
+            MetodoPago = metodoPago;
+            Lineas = lineas;
+            PrecioTotal = precioTotal;
+        }
+
         // Constructor desde entidad (Para el GET)
         public CompraAccesorioDTO(CompraAccesorios compra)
         {

@@ -20,7 +20,7 @@ namespace AppForSEII.UT.CompraAccesoriosController_test
             
             _context.AddRange(accesorio1, accesorio2);
             
-            var compraInicial = new CompraAccesorios(1, "Juan", "Perez", "Calle Falsa 123", "123456789", DateTime.Now, MetodoPago.TarjetaCredito, 0m);
+            var compraInicial = new CompraAccesorios(1, "Juan", "Perez", "Calle Falsa 123", "123456789", new DateTime(2026, 11, 8), MetodoPago.TarjetaCredito, 0m);
             var lineaInicial = new LineaCompraAccesorio(accesorio1, compraInicial, 2, accesorio1.Precio);
             
             compraInicial.LineasCompra.Add(lineaInicial);
@@ -41,9 +41,10 @@ namespace AppForSEII.UT.CompraAccesoriosController_test
             var okResult = Assert.IsType<OkObjectResult>(result); 
             var actualDto = Assert.IsType<CompraAccesorioDTO>(okResult.Value); 
             
-            Assert.Equal(1, actualDto.Id);
-            Assert.Single(actualDto.Lineas); 
-            Assert.Equal(11.98m, actualDto.PrecioTotal); 
+            var lineasEsperadas = new List<LineaCompraAccesorioDTO> { new LineaCompraAccesorioDTO(1, "Boquilla 0.4mm", 2, 5.99m, 11.98m) };
+            var compraEsperada = new CompraAccesorioDTO(1, new DateTime(2026, 11, 8), "Juan", "Perez", "Calle Falsa 123", "123456789", MetodoPago.TarjetaCredito, lineasEsperadas, 11.98m);
+
+            Assert.Equal(compraEsperada, actualDto);
         }
 
         [Fact]
