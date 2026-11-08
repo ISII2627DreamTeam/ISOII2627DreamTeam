@@ -14,9 +14,7 @@ namespace AppForSEII.API.Controllers
     [ApiController]
     public class ReservasImpresoraController : ControllerBase
     {
-        
         private readonly ApplicationDbContext _context;
-        
         private readonly ILogger<ReservasImpresoraController> _logger;
 
         public ReservasImpresoraController(ApplicationDbContext context, ILogger<ReservasImpresoraController> logger)
@@ -36,6 +34,27 @@ namespace AppForSEII.API.Controllers
                             (string.IsNullOrEmpty(tipo) || i.Tipo.ToString() == tipo))
                 .Select(i => new Impresora3DDTO(i))
                 .ToListAsync());
+        }
+
+    
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(ReservaImpresoraDTO), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetReservaImpresora(int id)
+        {
+            var reserva = await _context.ReservaImpresoras
+                .Include(r => r.LineasReserva)
+                    .ThenInclude(l => l.Impresora)
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (reserva == null)
+            {
+                _logger.LogWarning($"No se encontró la reserva con ID: {id}");
+                return NotFound();
+            }
+
+            return Ok(new ReservaImpresoraDTO(reserva));
         }
     }
 }
