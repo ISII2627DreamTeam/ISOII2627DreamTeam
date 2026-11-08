@@ -49,21 +49,22 @@ namespace AppForSEII.API.Controllers
                 // Ejecuta la consulta en SQL y lo convierte en una lista asíncrona para no bloquear el servidor mientras carga.
                 .ToListAsync());
         }
-        // GET: api/Modelos3D/GetModelo3D/5
+        
+        // GET DETAILS: api/Modelos3D/GetModelo3D/5
         [HttpGet]
         [Route("[action]/{id}")]
         [ProducesResponseType(typeof(Modelo3DDetailDTO), (int)System.Net.HttpStatusCode.OK)]
         [ProducesResponseType((int)System.Net.HttpStatusCode.NotFound)]
         public async Task<ActionResult> GetModelo3D(int id)
         {
-            // Comprobamos que el contexto de base de datos no sea nulo por seguridad
+            // comprobamos que el contexto de base de datos no sea nulo por seguridad
             if (_context.Modelos3D == null)
             {
                 _logger.LogError("Error: La tabla Modelos3D no existe en la base de datos.");
                 return NotFound();
             }
 
-            // Consultamos usando Eager Loading (.Include) para traernos las licencias asociadas
+            // consultamos usando Eager Loading (.Include) para traernos las licencias asociadas
             var modeloDetailDTO = await _context.Modelos3D
                 .Include(m => m.Licencias) 
                 .Where(m => m.Id == id) 
@@ -73,20 +74,80 @@ namespace AppForSEII.API.Controllers
                     m.Categoría,
                     m.Formato,
                     m.Precio,
-                    // Mapeamos la lista de licencias elemento a elemento llamando a su constructor
+                    // mapeamos la lista de licencias elemento a elemento llamando a su constructor
                     m.Licencias.Select(l => new LicenciaModelo3DDTO(l.Id, l.Nombre, l.FechaExpiracion)).ToList()
                 ))
                 .FirstOrDefaultAsync(); 
 
-            // Si el ID no existe en la base de datos, devolvemos un 404
+            // si el ID no existe en la base de datos, devolvemos un 404
             if (modeloDetailDTO == null)
             {
                 _logger.LogError($"Error: El modelo 3D con ID {id} no existe.");
                 return NotFound();
             }
 
-            // Si todo va como la seda, devolvemos un 200 OK con el DTO mapeado
+            // si todo va bien devolvemos un 200 OK con el DTO mapeado
             return Ok(modeloDetailDTO);
+        }
+
+
+       // POST: api/Modelos3D/PostModelo3D
+        [HttpPost]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(Modelo3DDetailDTO), (int)System.Net.HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)System.Net.HttpStatusCode.BadRequest)]
+        public async Task<ActionResult> PostModelo3D(Modelo3DDetailDTO modeloDTO)
+        {
+            // verificamos la disponibilidad del contexto de base de datos
+            if (_context.Modelos3D == null)
+            {
+                _logger.LogError("Error: La tabla Modelos3D no existe en la base de datos.");
+                return NotFound();
+            }
+
+            // el modelo debe contener al menos una licencia
+            if (modeloDTO.Licencias == null || !modeloDTO.Licencias.Any())
+            {
+                ModelState.AddModelError("Licencias", "Debe proporcionar al menos una licencia para crear el modelo 3D.");
+            }
+
+            // comprobamos errores de validación antes de procesar la entidad
+            if (ModelState.ErrorCount > 0)
+            {
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
+
+            // mapeo de DTO a entidad usando los constructores necesarios
+            var modelo3D = new Modelo3D(0, modeloDTO.Nombre, modeloDTO.Categoria, modeloDTO.Formato, modeloDTO.Precio);
+
+            var licenciasEntidad = new List<LicenciaModelo3D>();
+            
+            // uso de '!': garantiza al compilador que la entidad tiene su lista instanciada y no es nula para que no salte warning.
+            foreach (var licenciaDTO in modeloDTO.Licencias!)
+            {
+                var nuevaLicencia = new LicenciaModelo3D(0, licenciaDTO.Nombre, licenciaDTO.FechaExpiracion, modelo3D);
+                licenciasEntidad.Add(nuevaLicencia);
+            }
+            
+            modelo3D.Licencias = licenciasEntidad;
+
+            // se añade la entidad al contexto y persistencia en la base de datos
+            _context.Modelos3D.Add(modelo3D);
+            await _context.SaveChangesAsync();
+
+            // mapeo de entidad a DTO utilizando el constructor parametrizado
+            var modeloCreadoDTO = new Modelo3DDetailDTO(
+                modelo3D.Id,
+                modelo3D.Nombre,
+                modelo3D.Categoría,
+                modelo3D.Formato,
+                modelo3D.Precio,
+                // uso de '!': garantiza al compilador que la entidad tiene su lista instanciada y no es nula para que no salte warning.
+                modelo3D.Licencias!.Select(l => new LicenciaModelo3DDTO(l.Id, l.Nombre, l.FechaExpiracion)).ToList()
+            );
+
+            // retorno indicando la ruta de acceso al nuevo recurso
+            return CreatedAtAction(nameof(GetModelo3D), new { id = modelo3D.Id }, modeloCreadoDTO);
         }
     }
     
