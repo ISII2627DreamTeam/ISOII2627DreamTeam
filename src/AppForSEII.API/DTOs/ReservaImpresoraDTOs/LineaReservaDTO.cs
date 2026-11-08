@@ -1,21 +1,39 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using AppForSEII.API.Models;
 
 namespace AppForSEII.API.DTOs.ReservaImpresoraDTOs
 {
     public class LineaReservaDTO
     {
+        [Required]
         public int Impresora3DId { get; set; }
         public string NombreImpresora { get; set; }
         public string Modelo { get; set; }
         public TipoImpresora Tipo { get; set; }
         public string Descripcion { get; set; }
+        [Required]
         public TiempoReserva TiempoReserva { get; set; }
         public decimal PrecioKilovatioHora { get; set; }
         public decimal PrecioReserva { get; set; }
         public decimal PrecioSubtotal { get; set; }
 
-        
+        public LineaReservaDTO()
+        {
+            NombreImpresora = string.Empty;
+            Modelo = string.Empty;
+            Descripcion = string.Empty;
+        }
+
+        public LineaReservaDTO(int impresora3DId, TiempoReserva tiempoReserva)
+        {
+            Impresora3DId = impresora3DId;
+            TiempoReserva = tiempoReserva;
+            NombreImpresora = string.Empty;
+            Modelo = string.Empty;
+            Descripcion = string.Empty;
+        }
+
         public LineaReservaDTO(LineaReserva linea)
         {
             Impresora3DId = linea.Impresora3DId;
