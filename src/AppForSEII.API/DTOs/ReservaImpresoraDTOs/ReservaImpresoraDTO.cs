@@ -10,28 +10,21 @@ namespace AppForSEII.API.DTOs.ReservaImpresoraDTOs
     {
         public int Id { get; set; }
         public DateTime FechaReserva { get; set; }
-
         [Required]
         [StringLength(50)]
         public string NombreCliente { get; set; }
-
         [Required]
         [StringLength(100)]
         public string ApellidosCliente { get; set; }
-
         [Required]
         [StringLength(200)]
         public string DireccionFacturacion { get; set; }
-
         [Required]
         public MetodoPago MetodoPago { get; set; }
-
         public decimal PrecioTotal { get; set; }
-
         [Required]
         public List<LineaReservaDTO> Lineas { get; set; }
 
-        
         public ReservaImpresoraDTO()
         {
             NombreCliente = string.Empty;
@@ -40,7 +33,15 @@ namespace AppForSEII.API.DTOs.ReservaImpresoraDTOs
             Lineas = new List<LineaReservaDTO>();
         }
 
-    
+        public ReservaImpresoraDTO(string nombreCliente, string apellidosCliente, string direccionFacturacion, MetodoPago metodoPago, List<LineaReservaDTO> lineas)
+        {
+            NombreCliente = nombreCliente;
+            ApellidosCliente = apellidosCliente;
+            DireccionFacturacion = direccionFacturacion;
+            MetodoPago = metodoPago;
+            Lineas = lineas;
+        }
+
         public ReservaImpresoraDTO(ReservaImpresora reserva)
         {
             Id = reserva.Id;
