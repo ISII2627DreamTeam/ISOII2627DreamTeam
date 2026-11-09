@@ -23,10 +23,8 @@ namespace AppForSEII.UT.EncargosController_test
             var mat1 = new Material(1, "PLA Blanco", 0.05m, 1000m);
             var mat2 = new Material(2, "ABS Rojo", 0.06m, 500m);
 
-            var pieza1 = new Pieza3D(1, "Engranaje Helicoidal", 25.0m, (CategoriaPieza)0)
-            {
-                MaterialesValidos = new List<Material> { mat1 }
-            };
+            var pieza1 = new Pieza3D(1, "Engranaje Helicoidal", 25.0m, (CategoriaPieza)0);
+            pieza1.MaterialesValidos.Add(mat1);
 
             _context.AddRange(new List<Material> { mat1, mat2 });
             _context.Add(pieza1);
