@@ -30,6 +30,22 @@ public class EncargoImpresion
         ClienteId = cliente.Id;
         Cliente = cliente;
     }
+
+public EncargoImpresion(DateTime fechaEncargo, string nombreCliente, string apellidosCliente, string direccionEnvio, string numeroTelefono, string descripcion, decimal precioTotal, MetodoPago metodoPago, IList<LineaEncargo> lineasEncargo)
+    {
+        FechaEncargo = fechaEncargo;
+        NombreCliente = nombreCliente;
+        ApellidosCliente = apellidosCliente;
+        DireccionEnvio = direccionEnvio;
+        NumeroTelefono = numeroTelefono;
+        Descripcion = descripcion;
+        PrecioTotal = precioTotal;
+        MetodoPago = metodoPago;
+        LineasEncargo = lineasEncargo;
+        Cliente = new Cliente();
+        ClienteId = string.Empty;
+    }
+
     public int Id { get; set; }
     public DateTime FechaEncargo { get; set; }
 
