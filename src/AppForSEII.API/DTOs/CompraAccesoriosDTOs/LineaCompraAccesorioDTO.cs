@@ -6,6 +6,7 @@ namespace AppForSEII.API.DTOs.CompraAccesoriosDTOs
 {
     public class LineaCompraAccesorioDTO
     {
+        // Este DTO representa una línea individual dentro de la lista de compras.
         public int AccesorioId { get; set; }
         
         public string NombreAccesorio { get; set; }
@@ -17,12 +18,15 @@ namespace AppForSEII.API.DTOs.CompraAccesoriosDTOs
         public decimal PrecioUnidad { get; set; }
         public decimal Subtotal { get; set; }
 
+        // CONSTRUCTOR A: Vacío (Obligatorio para ASP.NET)
+        // Usado por el framework para deserializar el JSON vacío inicial.
         public LineaCompraAccesorioDTO() 
         { 
             NombreAccesorio = string.Empty;
         }
 
-        // Constructor para crear las líneas de entrada del POST
+        // CONSTRUCTOR B: Para los datos de entrada del cliente (POST en los Tests)
+        // Fíjate que SOLO pide ID y Cantidad.
         public LineaCompraAccesorioDTO(int accesorioId, int cantidad) 
         {
             AccesorioId = accesorioId;
@@ -30,7 +34,9 @@ namespace AppForSEII.API.DTOs.CompraAccesoriosDTOs
             NombreAccesorio = string.Empty;
         }
 
-        // Constructor para comprobar el resultado exacto en los Assert
+        // CONSTRUCTOR C: Para comprobar el resultado exacto en los Assert de los Tests
+        // Este sí tiene todos los campos, porque simula la respuesta final del servidor 
+        // una vez que ya ha calculado los precios reales.
         public LineaCompraAccesorioDTO(int accesorioId, string nombreAccesorio, int cantidad, decimal precioUnidad, decimal subtotal) 
         {
             AccesorioId = accesorioId;
@@ -40,7 +46,7 @@ namespace AppForSEII.API.DTOs.CompraAccesoriosDTOs
             Subtotal = subtotal;
         }
 
-        // Constructor desde entidad (Para el GET)
+        // CONSTRUCTOR D: Mapeo desde Entidad (Para el GET)
         public LineaCompraAccesorioDTO(LineaCompraAccesorio linea)
         {
             AccesorioId = linea.AccesorioId;
@@ -51,7 +57,7 @@ namespace AppForSEII.API.DTOs.CompraAccesoriosDTOs
         }
 
         public override bool Equals(object? obj)
-        {
+        { // Compara que todas las propiedades numéricas y de texto coincidan exactamente.
             return obj is LineaCompraAccesorioDTO dTO &&
                    AccesorioId == dTO.AccesorioId &&
                    NombreAccesorio == dTO.NombreAccesorio &&
