@@ -13,13 +13,16 @@ public class LineaEncargo
         MaterialSeleccionado = new Material();
     }
 
-    public LineaEncargo(int cantidad, decimal precioUnidad, decimal subtotal, EncargoImpresion encargoImpresion, Pieza3D pieza, Material materialSeleccionado) : this()
+    public LineaEncargo(int cantidad, decimal precioUnidad, decimal subtotal, EncargoImpresion encargoImpresion, Pieza3D pieza, Material materialSeleccionado)
     {
         Cantidad = cantidad;
         PrecioUnidad = precioUnidad;
-        Subtotal = cantidad * precioUnidad;
+        Subtotal = subtotal;
+        EncargoImpresion = encargoImpresion;
         EncargoImpresionId = encargoImpresion.Id;
+        Pieza = pieza;
         PiezaId = pieza.Id;
+        MaterialSeleccionado = materialSeleccionado;
         MaterialId = materialSeleccionado.Id;
     }
 

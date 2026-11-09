@@ -58,18 +58,18 @@ namespace AppForSEII.API.Controllers
             return BadRequest(new ValidationProblemDetails(ModelState));
         }
 
-        // 2. Mapear el DTO al modelo de base de datos (EncargoImpresion)
-        var encargo = new EncargoImpresion
-        {
-            NombreCliente = encargoDTO.NombreCliente,
-            ApellidosCliente = encargoDTO.ApellidosCliente,
-            DireccionEnvio = encargoDTO.DireccionEnvio,
-            NumeroTelefono = encargoDTO.NumeroTelefono,
-            Descripcion = encargoDTO.Descripcion,
-            MetodoPago = encargoDTO.MetodoPago,
-            FechaEncargo = DateTime.Now,
-            LineasEncargo = new List<LineaEncargo>()
-        };
+       // 2. Mapear el DTO al modelo de base de datos usando su constructor
+        var encargo = new EncargoImpresion(
+            DateTime.Now,
+            encargoDTO.NombreCliente,
+            encargoDTO.ApellidosCliente,
+            encargoDTO.DireccionEnvio,
+            encargoDTO.NumeroTelefono,
+            encargoDTO.Descripcion,
+            0m,
+            encargoDTO.MetodoPago,
+            new List<LineaEncargo>()
+        );
 
         decimal precioTotal = 0;
 
@@ -110,16 +110,14 @@ namespace AppForSEII.API.Controllers
             decimal subtotal = precioUnidad * lineaDTO.Cantidad;
             precioTotal += subtotal;
 
-            var lineaEncargo = new LineaEncargo
-            {
-                PiezaId = pieza.Id,
-                Pieza = pieza,
-                MaterialId = material.Id,
-                MaterialSeleccionado = material,
-                Cantidad = lineaDTO.Cantidad,
-                PrecioUnidad = precioUnidad,
-                Subtotal = subtotal
-            };
+            var lineaEncargo = new LineaEncargo(
+                lineaDTO.Cantidad,
+                precioUnidad,
+                subtotal,
+                encargo,
+                pieza,
+                material
+            );
 
             encargo.LineasEncargo.Add(lineaEncargo);
         }
