@@ -71,5 +71,19 @@ namespace AppForSEII.UT.CompraAccesoriosController_test
 
             Assert.IsType<BadRequestObjectResult>(result); 
         }
+
+        [Fact]
+        public async Task CreateCompraAccesorio_ReturnsBadRequest_WhenAccesorioDoesNotExist()
+        {
+            var mockLogger = new Mock<ILogger<CompraAccesoriosController>>();
+            var controller = new CompraAccesoriosController(_context, mockLogger.Object);
+
+            var lineasInexistentes = new List<LineaCompraAccesorioDTO> { new LineaCompraAccesorioDTO(999, 1) };
+            var nuevaCompraDto = new CompraAccesorioDTO("Luis", "Martinez", "Calle Falsa 123", "123456789", MetodoPago.TarjetaCredito, lineasInexistentes, 0m);
+
+            var result = await controller.CreateCompraAccesorio(nuevaCompraDto);
+
+            Assert.IsType<BadRequestObjectResult>(result); 
+        }
     }
 }
