@@ -80,7 +80,6 @@ namespace AppForSEII.API.Controllers
                 reservaDto.MetodoPago);
 
             decimal precioTotal = 0;
-            int numeroLinea = 1;
 
             foreach (var lineaDto in reservaDto.Lineas)
             {
