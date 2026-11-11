@@ -15,10 +15,9 @@ public class LineaReserva
         ReservaImpresora = new ReservaImpresora();
     }
 
-    public LineaReserva(int id, TiempoReserva tiempoReserva, decimal precioSubtotal, int impresora3DId, int reservaImpresoraId)
+    public LineaReserva(TiempoReserva tiempoReserva, decimal precioSubtotal, int impresora3DId, int reservaImpresoraId)
     :this()
     {
-        Id = id;
         TiempoReserva = tiempoReserva;
         PrecioSubtotal = precioSubtotal;
         Impresora3DId = impresora3DId;

@@ -10,9 +10,8 @@ public class CompraModelo3D
         CorreoElectronico = string.Empty;
         DireccionFacturacion = string.Empty;
     }
-    public CompraModelo3D(int id, DateTime fechaCompra, string nombreCliente, string apellidosCliente, string correoElectronico, string direccionFacturacion, string? descripcion, decimal precioTotal, MetodoPago metodoPago) : this()
+    public CompraModelo3D(DateTime fechaCompra, string nombreCliente, string apellidosCliente, string correoElectronico, string direccionFacturacion, string? descripcion, decimal precioTotal, MetodoPago metodoPago) : this()
 {
-    Id = id;
     FechaCompra = fechaCompra;
     NombreCliente = nombreCliente;
     ApellidosCliente = apellidosCliente;

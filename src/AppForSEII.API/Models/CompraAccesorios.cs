@@ -9,9 +9,8 @@ public class CompraAccesorios
         NumeroTelefono = string.Empty;
     }
 
-    public CompraAccesorios(int id, string nombreCliente, string apellidosCliente, string direccionEnvio, string numeroTelefono, DateTime fechaCompra, MetodoPago metodoPago, decimal precioTotal) : this()
+    public CompraAccesorios(string nombreCliente, string apellidosCliente, string direccionEnvio, string numeroTelefono, DateTime fechaCompra, MetodoPago metodoPago, decimal precioTotal) : this()
     {
-        Id = id;
         NombreCliente = nombreCliente;
         ApellidosCliente = apellidosCliente;
         DireccionEnvio = direccionEnvio;

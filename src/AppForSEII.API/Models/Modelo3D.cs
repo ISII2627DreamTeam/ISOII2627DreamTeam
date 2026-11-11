@@ -8,9 +8,8 @@ public class Modelo3D
         Categoría = string.Empty;
     }
 
-    public Modelo3D(int id, string nombre, string categoría, FormatoModelo3D formato, decimal precio) : this()
+    public Modelo3D(string nombre, string categoría, FormatoModelo3D formato, decimal precio) : this()
     {
-        Id = id;
         Nombre = nombre;
         Categoría = categoría;
         Formato = formato;

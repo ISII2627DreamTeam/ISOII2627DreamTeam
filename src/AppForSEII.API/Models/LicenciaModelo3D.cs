@@ -13,11 +13,9 @@ public class LicenciaModelo3D
 
    
 
-    public LicenciaModelo3D(int id, string nombre, DateTime fechaExpiracion, Modelo3D modelo3D) : this()
+    public LicenciaModelo3D(string nombre, DateTime fechaExpiracion, Modelo3D modelo3D) : this()
 
     {
-
-        Id = id;
 
         Nombre = nombre;
 
