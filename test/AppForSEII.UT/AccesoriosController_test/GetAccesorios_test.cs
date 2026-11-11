@@ -22,9 +22,9 @@ namespace AppForSEII.UT.AccesoriosController_test
             var accesorios = new List<Accesorio>
             {
                 // Se utilizan los constructores parametrizados del modelo para instanciar los objetos evitando inicializadores con llaves {}.
-                new Accesorio(1, "Boquilla 0.4mm", CategoriaAccesorio.Boquillas, "Ender 3", 50, 5.99m),
-                new Accesorio(2, "Cama de Cristal", CategoriaAccesorio.BasesDeImpresion, "Ender 3", 20, 15.50m),
-                new Accesorio(3, "Alicates", CategoriaAccesorio.Herramientas, "Universal", 30, 8.00m)
+                new Accesorio("Boquilla 0.4mm", CategoriaAccesorio.Boquillas, "Ender 3", 50, 5.99m),
+                new Accesorio("Cama de Cristal", CategoriaAccesorio.BasesDeImpresion, "Ender 3", 20, 15.50m),
+                new Accesorio("Alicates", CategoriaAccesorio.Herramientas, "Universal", 30, 8.00m)
             };
 
             // Añadimos la lista completa de accesorios al contexto de Entity Framework (en memoria).
@@ -40,9 +40,9 @@ namespace AppForSEII.UT.AccesoriosController_test
             List<AccesorioDTO> accesorioDTOs = new List<AccesorioDTO>()
             {
                 // Replicamos exactamente los mismos datos del Arrange global para tener el resultado esperado convertido en DTO.
-                new AccesorioDTO( new Accesorio(1, "Boquilla 0.4mm", CategoriaAccesorio.Boquillas, "Ender 3", 50, 5.99m)),
-                new AccesorioDTO( new Accesorio(2, "Cama de Cristal", CategoriaAccesorio.BasesDeImpresion, "Ender 3", 20, 15.50m)),
-                new AccesorioDTO( new Accesorio(3, "Alicates", CategoriaAccesorio.Herramientas, "Universal", 30, 8.00m))
+                new AccesorioDTO( new Accesorio("Boquilla 0.4mm", CategoriaAccesorio.Boquillas, "Ender 3", 50, 5.99m)),
+                new AccesorioDTO( new Accesorio("Cama de Cristal", CategoriaAccesorio.BasesDeImpresion, "Ender 3", 20, 15.50m)),
+                new AccesorioDTO( new Accesorio("Alicates", CategoriaAccesorio.Herramientas, "Universal", 30, 8.00m))
             };
 
             // Caso 1: Si no enviamos filtros, esperamos recibir la lista completa (los 3 DTOs).

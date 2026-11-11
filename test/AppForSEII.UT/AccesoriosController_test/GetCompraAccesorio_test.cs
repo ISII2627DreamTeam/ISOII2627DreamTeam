@@ -17,13 +17,13 @@ namespace AppForSEII.UT.CompraAccesoriosController_test
         public GetCompraAccesorio_test()
         {
             // 1. Insertamos datos maestros (accesorios).
-            var accesorio1 = new Accesorio(1, "Boquilla 0.4mm", CategoriaAccesorio.Boquillas, "Ender 3", 50, 5.99m);
-            var accesorio2 = new Accesorio(2, "Cama de Cristal", CategoriaAccesorio.BasesDeImpresion, "Ender 3", 20, 15.50m);
+            var accesorio1 = new Accesorio("Boquilla 0.4mm", CategoriaAccesorio.Boquillas, "Ender 3", 50, 5.99m);
+            var accesorio2 = new Accesorio("Cama de Cristal", CategoriaAccesorio.BasesDeImpresion, "Ender 3", 20, 15.50m);
             
             _context.AddRange(accesorio1, accesorio2);
             
             // 2. Insertamos una compra de prueba con su respectiva línea asociada.
-            var compraInicial = new CompraAccesorios(1, "Juan", "Perez", "Calle Falsa 123", "123456789", new DateTime(2026, 11, 8), MetodoPago.TarjetaCredito, 0m);
+            var compraInicial = new CompraAccesorios("Juan", "Perez", "Calle Falsa 123", "123456789", new DateTime(2026, 11, 8), MetodoPago.TarjetaCredito, 0m);
             var lineaInicial = new LineaCompraAccesorio(accesorio1, compraInicial, 2, accesorio1.Precio);
             
             compraInicial.LineasCompra.Add(lineaInicial);

@@ -19,11 +19,11 @@ namespace AppForSEII.UT.EncargosController_test
         public GetPiezaDetalle_test()
         {
             // Se crean dos materiales de prueba con su ID, nombre, precio por gramo y stock disponible.
-            var mat1 = new Material(1, "PLA Blanco", 0.05m, 1000m);
-            var mat2 = new Material(2, "PETG Negro", 0.08m, 500m);
+            var mat1 = new Material("PLA Blanco", 0.05m, 1000m);
+            var mat2 = new Material("PETG Negro", 0.08m, 500m);
 
             // Se crea una pieza 3D con ID 1 y se le asocian los dos materiales anteriores como materiales válidos.
-            var piezaConMateriales = new Pieza3D(1, "Engranaje Helicoidal", 25.5m, (CategoriaPieza)0)
+            var piezaConMateriales = new Pieza3D("Engranaje Helicoidal", 25.5m, (CategoriaPieza)0)
             {
                 MaterialesValidos = new List<Material> { mat1, mat2 }
             };

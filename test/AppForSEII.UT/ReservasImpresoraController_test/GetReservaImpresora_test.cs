@@ -11,7 +11,7 @@ namespace AppForSEII.UT.ReservasImpresoraController_test
         {
             var impresora = new Impresora3D("Ender 3", TipoImpresora.Filamento, "Creality Ender 3", "Impresora de filamento", 0.10m, 2.50m) { Id = 1 };
             _reserva = new ReservaImpresora(new DateTime(2026, 11, 8, 10, 0, 0), "Juan", "Perez", "Calle Falsa 123", 5.00m, MetodoPago.TarjetaCredito) { Id = 1 };
-            var linea = new LineaReserva(1, TiempoReserva.DosHoras, 5.00m, 1, 1)
+            var linea = new LineaReserva(TiempoReserva.DosHoras, 5.00m, 1, 1)
             {
                 Impresora = impresora,
                 ReservaImpresora = _reserva

@@ -19,8 +19,8 @@ namespace AppForSEII.UT.CompraAccesoriosController_test
             // 1. CONSTRUCTOR DE LA CLASE DE TEST (Configuración del Escenario)
             // Este código se ejecuta ANTES de cada uno de los métodos [Fact]. 
             // Sirve para llenar el almacén virtual con datos iniciales para poder probar.
-            var accesorio1 = new Accesorio(1, "Boquilla 0.4mm", CategoriaAccesorio.Boquillas, "Ender 3", 50, 5.99m);
-            var accesorio2 = new Accesorio(2, "Cama de Cristal", CategoriaAccesorio.BasesDeImpresion, "Ender 3", 20, 15.50m);
+            var accesorio1 = new Accesorio("Boquilla 0.4mm", CategoriaAccesorio.Boquillas, "Ender 3", 50, 5.99m);
+            var accesorio2 = new Accesorio("Cama de Cristal", CategoriaAccesorio.BasesDeImpresion, "Ender 3", 20, 15.50m);
             
             _context.AddRange(accesorio1, accesorio2);
             _context.SaveChanges();
