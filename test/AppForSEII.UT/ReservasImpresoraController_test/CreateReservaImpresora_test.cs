@@ -35,7 +35,7 @@ namespace AppForSEII.UT.ReservasImpresoraController_test
 
         private static LineaReservaDTO CrearLineaDto(int impresoraId, TiempoReserva tiempo)
         {
-            return new LineaReservaDTO(new LineaReserva(1, tiempo, 0m, impresoraId, -1));
+            return new LineaReservaDTO(new LineaReserva(tiempo, 0m, impresoraId, -1));
         }
 
         [Theory]
@@ -62,7 +62,7 @@ namespace AppForSEII.UT.ReservasImpresoraController_test
             var actual = Assert.IsType<ReservaImpresoraDTO>(createdResult.Value);
             var expectedReserva = new ReservaImpresora(actual.FechaReserva, "Jose Miguel", "Martinez", "Avenida Avenidosa 456", subtotal, MetodoPago.PayPal);
             expectedReserva.Id = actual.Id;
-            var expectedLinea = new LineaReserva(1, tiempo, subtotal, _impresoras[0].Id, actual.Id);
+            var expectedLinea = new LineaReserva(tiempo, subtotal, _impresoras[0].Id, actual.Id);
             expectedLinea.Impresora = _impresoras[0];
             expectedReserva.LineasReserva.Add(expectedLinea);
             Assert.Equal(new ReservaImpresoraDTO(expectedReserva), actual);
@@ -85,9 +85,9 @@ namespace AppForSEII.UT.ReservasImpresoraController_test
             var actual = Assert.IsType<ReservaImpresoraDTO>(createdResult.Value);
             var expectedReserva = new ReservaImpresora(actual.FechaReserva, "Jose Miguel", "Martinez", "Avenida Avenidosa 456", 102.00m, MetodoPago.PayPal);
             expectedReserva.Id = actual.Id;
-            var expectedLinea1 = new LineaReserva(1, TiempoReserva.TresHoras, 6.00m, _impresoras[0].Id, actual.Id);
+            var expectedLinea1 = new LineaReserva(TiempoReserva.TresHoras, 6.00m, _impresoras[0].Id, actual.Id);
             expectedLinea1.Impresora = _impresoras[0];
-            var expectedLinea2 = new LineaReserva(2, TiempoReserva.UnDia, 96.00m, _impresoras[1].Id, actual.Id);
+            var expectedLinea2 = new LineaReserva(TiempoReserva.UnDia, 96.00m, _impresoras[1].Id, actual.Id);
             expectedLinea2.Impresora = _impresoras[1];
             expectedReserva.LineasReserva.Add(expectedLinea1);
             expectedReserva.LineasReserva.Add(expectedLinea2);

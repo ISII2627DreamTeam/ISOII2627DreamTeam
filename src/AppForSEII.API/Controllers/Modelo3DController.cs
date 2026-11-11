@@ -118,7 +118,7 @@ namespace AppForSEII.API.Controllers
             }
 
             // mapeo de DTO a entidad usando los constructores necesarios
-            var modelo3D = new Modelo3D(0, modeloDTO.Nombre, modeloDTO.Categoria, modeloDTO.Formato, modeloDTO.Precio);
+            var modelo3D = new Modelo3D(modeloDTO.Nombre, modeloDTO.Categoria, modeloDTO.Formato, modeloDTO.Precio);
 
             var licenciasEntidad = new List<LicenciaModelo3D>();
             

@@ -19,9 +19,9 @@ namespace AppForSEII.UT.EncargosController_test
         {
             var piezas = new List<Pieza3D>()
             {
-                new Pieza3D(1, "Engranaje Helicoidal", 25.5m, (CategoriaPieza)0),
-                new Pieza3D(2, "Soporte Pared", 50.0m, (CategoriaPieza)1),
-                new Pieza3D(3, "Figura articulada", 15.0m, (CategoriaPieza)2)
+                new Pieza3D("Engranaje Helicoidal", 25.5m, (CategoriaPieza)0),
+                new Pieza3D("Soporte Pared", 50.0m, (CategoriaPieza)1),
+                new Pieza3D("Figura articulada", 15.0m, (CategoriaPieza)2)
             };
 
             // Se insertan las 3 piezas en el contexto y se guardan los cambios en memoria.

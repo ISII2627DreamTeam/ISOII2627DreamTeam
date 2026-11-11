@@ -11,9 +11,8 @@ public class Pieza3D
         Categoria = new CategoriaPieza();
     }
 
-    public Pieza3D(int id, string nombre, decimal peso, CategoriaPieza categoria)
+    public Pieza3D(string nombre, decimal peso, CategoriaPieza categoria)
     {
-        Id = id;
         Nombre = nombre;
         Peso = peso;
         Categoria = categoria;

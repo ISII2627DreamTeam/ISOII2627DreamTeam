@@ -80,7 +80,6 @@ namespace AppForSEII.API.Controllers
                 reservaDto.MetodoPago);
 
             decimal precioTotal = 0;
-            int numeroLinea = 1;
 
             foreach (var lineaDto in reservaDto.Lineas)
             {
@@ -105,7 +104,6 @@ namespace AppForSEII.API.Controllers
         
                 var nuevaLinea = new LineaReserva
                 {
-                    Id = numeroLinea++,
                     TiempoReserva = lineaDto.TiempoReserva,
                     PrecioSubtotal = subtotal,
                     Impresora3DId = impresora.Id,

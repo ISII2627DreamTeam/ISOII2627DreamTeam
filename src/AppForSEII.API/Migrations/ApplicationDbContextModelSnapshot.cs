@@ -420,13 +420,10 @@ namespace AppForSEII.API.Migrations
 
             modelBuilder.Entity("AppForSEII.API.Models.LineaReserva", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("Impresora3DId")
                         .HasColumnType("int");
 
                     b.Property<int>("ReservaImpresoraId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Impresora3DId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("PrecioSubtotal")
@@ -435,9 +432,7 @@ namespace AppForSEII.API.Migrations
                     b.Property<int>("TiempoReserva")
                         .HasColumnType("int");
 
-                    b.HasKey("Id", "ReservaImpresoraId");
-
-                    b.HasIndex("Impresora3DId");
+                    b.HasKey("Impresora3DId", "ReservaImpresoraId");
 
                     b.HasIndex("ReservaImpresoraId");
 
@@ -454,13 +449,16 @@ namespace AppForSEII.API.Migrations
 
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal>("PrecioPorGramo")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(10, 4)
+                        .HasColumnType("decimal(10,4)");
 
                     b.Property<decimal>("StockGramos")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(10, 4)
+                        .HasColumnType("decimal(10,4)");
 
                     b.HasKey("Id");
 

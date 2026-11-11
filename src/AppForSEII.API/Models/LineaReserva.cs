@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AppForSEII.API.Models;
 
-[PrimaryKey(nameof(Id), nameof(ReservaImpresoraId))]
+[PrimaryKey(nameof(Impresora3DId), nameof(ReservaImpresoraId))]
 public class LineaReserva
 {
     public LineaReserva()
@@ -15,17 +15,15 @@ public class LineaReserva
         ReservaImpresora = new ReservaImpresora();
     }
 
-    public LineaReserva(int id, TiempoReserva tiempoReserva, decimal precioSubtotal, int impresora3DId, int reservaImpresoraId)
+    public LineaReserva(TiempoReserva tiempoReserva, decimal precioSubtotal, int impresora3DId, int reservaImpresoraId)
     :this()
     {
-        Id = id;
         TiempoReserva = tiempoReserva;
         PrecioSubtotal = precioSubtotal;
         Impresora3DId = impresora3DId;
         ReservaImpresoraId = reservaImpresoraId;
     }
 
-    public int Id { get; set; }
     
     public TiempoReserva TiempoReserva { get; set; }
     

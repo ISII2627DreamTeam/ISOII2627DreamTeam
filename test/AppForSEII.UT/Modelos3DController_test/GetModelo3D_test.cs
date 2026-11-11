@@ -17,11 +17,11 @@ namespace AppForSEII.UT.Modelos3DController_test
         public GetModelo3D_test()
         {
             // instanciamos la entidad principal usando el constructor estricto
-            var modeloPrueba = new Modelo3D(1, "Figura Coleccionable", "Figuras", (FormatoModelo3D)1, 25.99m);
+            var modeloPrueba = new Modelo3D("Figura Coleccionable", "Figuras", (FormatoModelo3D)1, 25.99m);
             
             // instanciamos las entidades dependientes referenciando al objeto principal
-            var licencia1 = new LicenciaModelo3D(1, "Licencia Comercial", new DateTime(2027, 12, 31), modeloPrueba);
-            var licencia2 = new LicenciaModelo3D(2, "Licencia Personal", new DateTime(2028, 12, 31), modeloPrueba);
+            var licencia1 = new LicenciaModelo3D("Licencia Comercial", new DateTime(2027, 12, 31), modeloPrueba);
+            var licencia2 = new LicenciaModelo3D("Licencia Personal", new DateTime(2028, 12, 31), modeloPrueba);
             
             // se asigna la lista sin utilizar inicializadores de objeto {}
             var listaLicencias = new List<LicenciaModelo3D>();

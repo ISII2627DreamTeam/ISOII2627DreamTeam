@@ -9,10 +9,9 @@ public class Accesorio
         Compatibilidad = string.Empty;
     }
 
-    public Accesorio(int id, string nombre, CategoriaAccesorio categoria, string compatibilidad, 
+    public Accesorio(string nombre, CategoriaAccesorio categoria, string compatibilidad, 
         int cantidadDisponible, decimal precio) : this()
     {
-        Id = id;
         Nombre = nombre;
         Categoria = categoria;
         Compatibilidad = compatibilidad;
