@@ -105,7 +105,6 @@ namespace AppForSEII.API.Controllers
         
                 var nuevaLinea = new LineaReserva
                 {
-                    Id = numeroLinea++,
                     TiempoReserva = lineaDto.TiempoReserva,
                     PrecioSubtotal = subtotal,
                     Impresora3DId = impresora.Id,
