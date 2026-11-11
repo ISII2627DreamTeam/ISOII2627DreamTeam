@@ -118,14 +118,14 @@ namespace AppForSEII.API.Controllers
             }
 
             // mapeo de DTO a entidad usando los constructores necesarios
-            var modelo3D = new Modelo3D(0, modeloDTO.Nombre, modeloDTO.Categoria, modeloDTO.Formato, modeloDTO.Precio);
+            var modelo3D = new Modelo3D(modeloDTO.Nombre, modeloDTO.Categoria, modeloDTO.Formato, modeloDTO.Precio);
 
             var licenciasEntidad = new List<LicenciaModelo3D>();
             
             // uso de '!': garantiza al compilador que la entidad tiene su lista instanciada y no es nula para que no salte warning.
             foreach (var licenciaDTO in modeloDTO.Licencias!)
             {
-                var nuevaLicencia = new LicenciaModelo3D(0, licenciaDTO.Nombre, licenciaDTO.FechaExpiracion, modelo3D);
+                var nuevaLicencia = new LicenciaModelo3D(licenciaDTO.Nombre, licenciaDTO.FechaExpiracion, modelo3D);
                 licenciasEntidad.Add(nuevaLicencia);
             }
             

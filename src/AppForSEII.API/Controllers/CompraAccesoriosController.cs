@@ -75,8 +75,7 @@ namespace AppForSEII.API.Controllers
             //Instanciamos el modelo de dominio
             // - Pasamos 0 como id porque la base de datos lo generará automáticamente
             // - Pasamos DateTime.Now como fecha de compra porque queremos registrar la fecha actual
-            var nuevaCompra = new CompraAccesorios(
-                0, 
+            var nuevaCompra = new CompraAccesorios( 
                 compraDto.NombreCliente, 
                 compraDto.ApellidosCliente, 
                 compraDto.DireccionEnvio, 
