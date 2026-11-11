@@ -276,18 +276,23 @@ namespace AppForSEII.API.Migrations
 
             modelBuilder.Entity("AppForSEII.API.Models.Impresora3D", b =>
                 {
-                    b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
                     b.Property<string>("Modelo")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -303,7 +308,7 @@ namespace AppForSEII.API.Migrations
                     b.Property<int>("Tipo")
                         .HasColumnType("int");
 
-                    b.HasKey("Nombre");
+                    b.HasKey("Id");
 
                     b.ToTable("Impresora3Ds");
                 });
@@ -415,18 +420,11 @@ namespace AppForSEII.API.Migrations
 
             modelBuilder.Entity("AppForSEII.API.Models.LineaReserva", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("Impresora3DId")
                         .HasColumnType("int");
 
                     b.Property<int>("ReservaImpresoraId")
                         .HasColumnType("int");
-
-                    b.Property<int>("Impresora3DId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ImpresoraNombre")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("PrecioSubtotal")
                         .HasColumnType("decimal(18,2)");
@@ -434,9 +432,7 @@ namespace AppForSEII.API.Migrations
                     b.Property<int>("TiempoReserva")
                         .HasColumnType("int");
 
-                    b.HasKey("Id", "ReservaImpresoraId");
-
-                    b.HasIndex("ImpresoraNombre");
+                    b.HasKey("Impresora3DId", "ReservaImpresoraId");
 
                     b.HasIndex("ReservaImpresoraId");
 
@@ -453,13 +449,16 @@ namespace AppForSEII.API.Migrations
 
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal>("PrecioPorGramo")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(10, 4)
+                        .HasColumnType("decimal(10,4)");
 
                     b.Property<decimal>("StockGramos")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(10, 4)
+                        .HasColumnType("decimal(10,4)");
 
                     b.HasKey("Id");
 
@@ -807,7 +806,7 @@ namespace AppForSEII.API.Migrations
                 {
                     b.HasOne("AppForSEII.API.Models.Impresora3D", "Impresora")
                         .WithMany("LineasReserva")
-                        .HasForeignKey("ImpresoraNombre")
+                        .HasForeignKey("Impresora3DId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
