@@ -114,8 +114,9 @@ namespace AppForSEII.API.Migrations
                 name: "Impresora3Ds",
                 columns: table => new
                 {
-                    Nombre = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Tipo = table.Column<int>(type: "int", nullable: false),
                     Modelo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
@@ -124,7 +125,7 @@ namespace AppForSEII.API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Impresora3Ds", x => x.Nombre);
+                    table.PrimaryKey("PK_Impresora3Ds", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -431,17 +432,16 @@ namespace AppForSEII.API.Migrations
                     ReservaImpresoraId = table.Column<int>(type: "int", nullable: false),
                     TiempoReserva = table.Column<int>(type: "int", nullable: false),
                     PrecioSubtotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Impresora3DId = table.Column<int>(type: "int", nullable: false),
-                    ImpresoraNombre = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Impresora3DId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_LineaReservas", x => new { x.Id, x.ReservaImpresoraId });
                     table.ForeignKey(
-                        name: "FK_LineaReservas_Impresora3Ds_ImpresoraNombre",
-                        column: x => x.ImpresoraNombre,
+                        name: "FK_LineaReservas_Impresora3Ds_Impresora3DId",
+                        column: x => x.Impresora3DId,
                         principalTable: "Impresora3Ds",
-                        principalColumn: "Nombre",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_LineaReservas_ReservaImpresoras_ReservaImpresoraId",
@@ -535,9 +535,9 @@ namespace AppForSEII.API.Migrations
                 column: "Modelo3DId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LineaReservas_ImpresoraNombre",
+                name: "IX_LineaReservas_Impresora3DId",
                 table: "LineaReservas",
-                column: "ImpresoraNombre");
+                column: "Impresora3DId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LineaReservas_ReservaImpresoraId",
