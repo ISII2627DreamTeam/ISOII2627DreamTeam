@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AppForSEII.API.Models;
 
-[PrimaryKey(nameof(Id), nameof(ReservaImpresoraId))]
+[PrimaryKey(nameof(Impresora3DId), nameof(ReservaImpresoraId))]
 public class LineaReserva
 {
     public LineaReserva()
@@ -24,7 +24,6 @@ public class LineaReserva
         ReservaImpresoraId = reservaImpresoraId;
     }
 
-    public int Id { get; set; }
     
     public TiempoReserva TiempoReserva { get; set; }
     
