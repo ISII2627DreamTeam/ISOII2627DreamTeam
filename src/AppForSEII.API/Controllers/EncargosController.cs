@@ -69,6 +69,12 @@ namespace AppForSEII.API.Controllers
             return BadRequest(new ValidationProblemDetails(ModelState));
         }
 
+        if (!encargoDTO.DireccionEnvio.EndsWith("España"))
+            {
+                ModelState.AddModelError("DireccionEnvio", "¡Error! Solo se realizan envíos dentro de España.");
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
+
         // 2. Mapear el DTO al modelo de base de datos (EncargoImpresion) asignando los datos del cliente,
         // el método de pago, la fecha actual del sistema y la lista vacía donde se añadirán las líneas.
         var encargo = new EncargoImpresion
@@ -108,7 +114,7 @@ namespace AppForSEII.API.Controllers
             // Si el material no se encuentra en la lista de MaterialesValidos de esa pieza, se registra el error en ModelState.
             if (material == null)
             {
-                ModelState.AddModelError("MaterialId", $"Error! El material con ID {lineaDTO.MaterialId} no es válido para la pieza '{pieza.Nombre}'.");
+                ModelState.AddModelError("MaterialId", $"Error! El material no es válido para la pieza.");
                 continue;
             }
 
@@ -116,9 +122,11 @@ namespace AppForSEII.API.Controllers
             decimal gramosNecesarios = pieza.Peso * lineaDTO.Cantidad;
             if (material.StockGramos < gramosNecesarios)
             {
-                ModelState.AddModelError("Cantidad", $"Error! No hay suficiente stock del material '{material.Nombre}' para imprimir {lineaDTO.Cantidad} unidades de '{pieza.Nombre}'.");
+                ModelState.AddModelError("Cantidad", $"Error no hay suficuente stock");
                 continue;
             }
+
+            
 
             // Reducir el stock del material y calcular el precio unitario, el subtotal de la línea y sumarlo al precioTotal
             material.StockGramos -= gramosNecesarios;
