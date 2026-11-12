@@ -105,6 +105,12 @@ namespace AppForSEII.API.Controllers
                 return NotFound();
             }
 
+            //EXAMEN
+            if (modeloDTO.Nombre.Equals("Cliente"))
+            {
+                return BadRequest("¡Error! "+ modeloDTO.Nombre + " no es un nombre válido");
+            }
+
             // el modelo debe contener al menos una licencia
             if (modeloDTO.Licencias == null || !modeloDTO.Licencias.Any())
             {
