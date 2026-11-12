@@ -1,6 +1,7 @@
 using AppForSEII.API.Controllers;
 using AppForSEII.API.DTOs.ReservaImpresoraDTOs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.TestPlatform.CoreUtilities.Extensions;
 
 namespace AppForSEII.UT.ReservasImpresoraController_test
 {
@@ -155,6 +156,33 @@ namespace AppForSEII.UT.ReservasImpresoraController_test
             // Assert
             Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal(0, await _context.ReservaImpresoras.CountAsync());
+        }
+
+        [Fact]
+        public async Task CreateReservaImpresora_ReturnsBadRequest_WhenNombreClienteNoValido()
+        {
+            // Arrange
+            var controller = CrearController();
+            var dto = CrearReservaDto();
+            dto.Lineas.Add(CrearLineaDto(999, TiempoReserva.UnaHora));
+
+            // Act
+            var result = await controller.CreateReservaImpresora(dto);
+
+            
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(result);
+           Assert.Equal(0, await _context.ReservaImpresoras.CountAsync());
+            
+
+
+
+            
+        }
+
+        private object CrearReservaDto(object reserva)
+        {
+            throw new NotImplementedException();
         }
     }
 }
