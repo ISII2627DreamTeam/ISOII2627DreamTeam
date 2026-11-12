@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using AppForSEII.API.Data;
 using AppForSEII.API.DTOs.ReservaImpresoraDTOs;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AppForSEII.API.Controllers
 {
@@ -68,6 +69,12 @@ namespace AppForSEII.API.Controllers
             if (reservaDto.Lineas == null || !reservaDto.Lineas.Any())
             {
                 ModelState.AddModelError("Lineas", "La reserva debe incluir al menos una impresora.");
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
+
+            if(reservaDto.NombreCliente.Length<3)
+            {
+                ModelState.AddModelError("NombreCliente","El nombre del cliente debe de tener al menos 3 caracteres");
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
