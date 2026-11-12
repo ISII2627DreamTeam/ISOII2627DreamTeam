@@ -116,5 +116,21 @@ namespace AppForSEII.UT.CompraAccesoriosController_test
             // ASSERT: Devuelve HTTP 400.
             Assert.IsType<BadRequestObjectResult>(result); 
         }
+
+        [Fact]
+        public async Task CreateCompraAccesorio_ReturnsBadRequest_WhenDireccionEnvioIncorrecta()
+        {
+            var mockLogger = new Mock<ILogger<CompraAccesoriosController>>();
+            var controller = new CompraAccesoriosController(_context, mockLogger.Object);
+
+            var lineasCorrecta = new List<LineaCompraAccesorioDTO> { new LineaCompraAccesorioDTO(1, 1) };
+            var nuevaCompraDto = new CompraAccesorioDTO("Luis", "Martinez", "Calle Falsa, Apartado B", "123456789", MetodoPago.TarjetaCredito, lineasCorrecta, 0m);
+
+            var result = await controller.CreateCompraAccesorio(nuevaCompraDto);
+
+            Assert.IsType<BadRequestObjectResult>(result); 
+        }
+
+
     }
 }

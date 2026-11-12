@@ -67,6 +67,12 @@ namespace AppForSEII.API.Controllers
                 ModelState.AddModelError("Lineas", "La compra debe incluir al menos un accesorio."); //Añadimos el error al diccionario ModelState, que guarda los errores de validación
             }
 
+            //MODIFICACION EXAMEN
+            if(compraDto.DireccionEnvio.Contains("Apartado"))
+            {
+                ModelState.AddModelError("DireccionEnvio", "¡Error! No se realizan envíos a apartados de correos");
+            }
+
             if (ModelState.ErrorCount > 0) // Si hay errores de validación, devolvemos un 400 Bad Request con los detalles de los errores
             {
                 return BadRequest(new ValidationProblemDetails(ModelState)); //Devolvemos un 400 Bad Request con los detalles de los errores de validación
