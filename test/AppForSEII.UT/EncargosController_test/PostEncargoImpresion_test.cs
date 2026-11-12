@@ -20,14 +20,27 @@ namespace AppForSEII.UT.EncargosController_test
         // - Pieza 1: pesa 25g y solo tiene como material válido el Material 1.
         public PostEncargoImpresion_test()
         {
-            var mat1 = new Material("PLA Blanco", 0.05m, 1000m);
-            var mat2 = new Material("ABS Rojo", 0.06m, 500m);
+            var mat1 = new Material("PLA Blanco", 0.05m, 10000.0m);
+            var mat2 = new Material("PETG Negro", 0.08m, 50.0m);
+            var mat3 = new Material("ABS Rojo", 0.06m, 50.0m);
+            
+        
 
             var pieza1 = new Pieza3D("Engranaje Helicoidal", 25.0m, (CategoriaPieza)0);
             pieza1.MaterialesValidos.Add(mat1);
+            
 
-            _context.AddRange(new List<Material> { mat1, mat2 });
-            _context.Add(pieza1);
+            var pieza2 = new Pieza3D("Soporte Pared", 50.0m, (CategoriaPieza)1);
+            pieza2.MaterialesValidos.Add(mat2);
+            pieza2.MaterialesValidos.Add(mat3);
+
+            var pieza3 = new Pieza3D("Figura articulada", 15.0m, (CategoriaPieza)2);
+            pieza3.MaterialesValidos.Add(mat1);
+            
+            
+
+            _context.AddRange(new List<Material> { mat1, mat2, mat3 });
+            _context.AddRange(new List<Pieza3D> { pieza1, pieza2, pieza3 });
             _context.SaveChanges();
         }
 
@@ -37,12 +50,12 @@ namespace AppForSEII.UT.EncargosController_test
         {
             // Caso de error 1: Encargo con la lista de líneas vacía (sin piezas solicitadas).
             var encargoSinLineas = new EncargoParaCrearDTO(
-                "Juan", "Pérez", "Calle Mayor 1", "600123456", "Urgente",
+                "Juan", "Pérez", "Calle Mayor 1, España", "600123456", "Urgente",
                 (MetodoPago)0, new List<LineaEncargoParaCrearDTO>());
 
             // Caso de error 2: Se solicita una pieza con ID 99 que no existe en la base de datos.
             var encargoPiezaNoExiste = new EncargoParaCrearDTO(
-                "Juan", "Pérez", "Calle Mayor 1", "600123456", "Urgente",
+                "Juan", "Pérez", "Calle Mayor 1, España", "600123456", "Urgente",
                 (MetodoPago)0, new List<LineaEncargoParaCrearDTO>
                 {
                     new LineaEncargoParaCrearDTO(99, 1, 2)
@@ -50,7 +63,7 @@ namespace AppForSEII.UT.EncargosController_test
 
             // Caso de error 3: Se solicita la Pieza 1 con el Material 2, el cual no está en su lista de MaterialesValidos.
             var encargoMaterialNoValido = new EncargoParaCrearDTO(
-                "Juan", "Pérez", "Calle Mayor 1", "600123456", "Urgente",
+                "Juan", "Pérez", "Calle Mayor 1, España", "600123456", "Urgente",
                 (MetodoPago)0, new List<LineaEncargoParaCrearDTO>
                 {
                     new LineaEncargoParaCrearDTO(1, 2, 2)
@@ -58,10 +71,17 @@ namespace AppForSEII.UT.EncargosController_test
 
             // Caso de error 4: Se piden 100 unidades de la Pieza 1 (100 * 25g = 2500g), superando los 1000g de stock del Material 1.
             var encargoSinStock = new EncargoParaCrearDTO(
+                "Juan", "Pérez", "Calle Mayor 1, España", "600123456", "Urgente",
+                (MetodoPago)0, new List<LineaEncargoParaCrearDTO>
+                {
+                    new LineaEncargoParaCrearDTO(1, 1, 1000000)
+                });
+            //Cso de error 5
+            var encargoDireccionErronea = new EncargoParaCrearDTO(
                 "Juan", "Pérez", "Calle Mayor 1", "600123456", "Urgente",
                 (MetodoPago)0, new List<LineaEncargoParaCrearDTO>
                 {
-                    new LineaEncargoParaCrearDTO(1, 1, 100)
+                    new LineaEncargoParaCrearDTO(1, 1, 1)
                 });
 
             // Se agrupan los 4 escenarios junto con sus respectivos mensajes de validación esperados.
@@ -69,8 +89,9 @@ namespace AppForSEII.UT.EncargosController_test
             {
                 new object[] { encargoSinLineas, "Error! El encargo debe contener al menos una pieza para imprimir." },
                 new object[] { encargoPiezaNoExiste, "Error! La pieza con ID 99 no existe." },
-                new object[] { encargoMaterialNoValido, "Error! El material con ID 2 no es válido para la pieza 'Engranaje Helicoidal'." },
-                new object[] { encargoSinStock, "Error! No hay suficiente stock del material 'PLA Blanco' para imprimir 100 unidades de 'Engranaje Helicoidal'." }
+                new object[] { encargoMaterialNoValido, "Error! El material no es válido para la pieza." },
+                new object[] { encargoSinStock, "Error no hay suficuente stock" },
+                new object[] { encargoDireccionErronea, "¡Error! Solo se realizan envíos dentro de España." },
             };
 
             return allTests;
@@ -115,20 +136,20 @@ namespace AppForSEII.UT.EncargosController_test
             // Se crea una línea válida: Pieza 1, Material 1 (compatible) y Cantidad 2 (2 * 25g = 50g <= 1000g de stock).
             var lineas = new List<LineaEncargoParaCrearDTO>
             {
-                new LineaEncargoParaCrearDTO(1, 1, 2)
+                new LineaEncargoParaCrearDTO(1, 1, 1)
             };
 
             // DTO de entrada que se enviará al método POST.
             var encargoDTO = new EncargoParaCrearDTO(
-                "Juan", "Pérez", "Calle Mayor 1", "600123456", "Impresión estándar",
+                "Juan", "Pérez", "Calle Mayor 1, España", "600123456", "Urgente",
                 (MetodoPago)0, lineas);
 
             // DTO esperado con el que se comparará la respuesta devuelta por el controlador.
             var expectedEncargoDTO = new EncargoParaCrearDTO(
-                "Juan", "Pérez", "Calle Mayor 1", "600123456", "Impresión estándar",
+                "Juan", "Pérez", "Calle Mayor 1, España", "600123456", "Urgente",
                 (MetodoPago)0, new List<LineaEncargoParaCrearDTO>
                 {
-                    new LineaEncargoParaCrearDTO(1, 1, 2)
+                    new LineaEncargoParaCrearDTO(1, 1, 1)
                 });
 
             // Act: Se ejecuta la creación del encargo.
