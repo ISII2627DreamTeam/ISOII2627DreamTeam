@@ -24,7 +24,7 @@ namespace AppForSEII.API.DTOs.CompraModelos3DDTOs
         public FormatoModelo3D Formato { get; set; }
 
         [Required(ErrorMessage = "El precio es obligatorio")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "El precio debe ser mayor a 0")]
+        [Range(0.01, 9999999.99, ErrorMessage = "El precio debe ser mayor a 0")]
         public decimal Precio { get; set; }
 
         [Required(ErrorMessage = "Debe incluir la lista de licencias")]
