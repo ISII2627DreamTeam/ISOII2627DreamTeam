@@ -6,6 +6,7 @@ using AppForSEII.Web.Components;
 using AppForSEII.Web.Components.Account;
 using AppForSEII.Web.Data;
 using AppForSEII.Web.API;
+using AppForSEII.Web;
 
 
 
@@ -77,6 +78,9 @@ string? URI2API = builder.Configuration.GetValue(typeof(string), "AppForSEIIAPIC
 
 //the environment variable URI2API is defined in appsettings.json
 builder.Services.AddScoped<AppForSEIIAPIClient>(sp =>new AppForSEIIAPIClient(URI2API, new HttpClient()));
+
+//StateContainer para mantener el carrito de la compra de accesorios entre páginas
+builder.Services.AddScoped<CompraAccesoriosStateContainer>();
 
 var app = builder.Build();
 
