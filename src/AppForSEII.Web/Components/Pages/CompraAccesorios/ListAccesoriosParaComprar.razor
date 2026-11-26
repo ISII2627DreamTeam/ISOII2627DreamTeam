@@ -1,0 +1,133 @@
+@* ===== 1. Directivas ===== *@
+@page "/compraaccesorios/listaccesoriosparacomprar"
+@using AppForSEII.Web.API
+@* Cliente de la API para obtener los accesorios *@
+@inject AppForSEIIAPIClient API
+@* Carrito compartido entre páginas *@
+@inject CompraAccesoriosStateContainer compraState
+@* Permite cambiar de página desde el código *@
+@inject NavigationManager navigation
+@* Obliga a iniciar sesión (precondición del caso de uso) *@
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+@* ===== 2. HTML: cabecera, filtros, resultados y acciones ===== *@
+
+@* Cabecera *@
+<PageTitle>Comprar accesorios</PageTitle>
+<h3>Accesorios para comprar</h3>
+
+@* Rejilla de Bootstrap: 8 columnas para la lista y 4 para el carrito *@
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+
+            @* Filtros por nombre y categoría *@
+            <div class="mb-3">
+                <input class="form-control" @bind="nombreAccesorio" id="inputNombre" placeholder="Nombre" />
+                <select class="form-select" @bind="categoriaSeleccionada" id="selectCategoria">
+                    <option value="Todas">Todas</option>
+                    <option value="Boquillas">Boquillas</option>
+                    <option value="BasesDeImpresion">Bases de impresión</option>
+                    <option value="Herramientas">Herramientas</option>
+                    <option value="KitsDeLimpieza">Kits de limpieza</option>
+                    <option value="Repuestos">Repuestos</option>
+                </select>
+                <button class="btn btn-primary" @onclick="SearchAccesorios" id="searchAccesorios">Buscar</button>
+            </div>
+
+            @* Resultados: mensaje mientras carga, si no hay accesorios o la tabla con todos *@
+            @if (accesorios == null)
+            {
+                <p>Cargando...</p>
+            }
+            else if (!accesorios.Any())
+            {
+                <p id="NoAccesorios">No se han encontrado accesorios.</p>
+            }
+            else
+            {
+                <table class="table" id="TableOfAccesorios">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Categoría</th>
+                            <th>Añadir</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var a in accesorios)
+                        {
+                            <tr>
+                                <td>@a.Nombre</td>
+                                <td>@a.Categoria</td>
+                                @* La lambda envía al método el accesorio de la fila pulsada *@
+                                <td><button class="btn btn-outline-secondary" @onclick="() => AddAccesorio(a)">Añadir</button></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+
+        @* Carrito: se oculta si está vacío, así no se puede continuar con la compra *@
+        <div class="col-md-4" hidden="@hideCarrito">
+            <h4>Carrito</h4>
+            @foreach (var linea in compra.Lineas)
+            {
+                @* Al pulsar el botón se elimina el accesorio del carrito *@
+                <button class="btn btn-light" @onclick="() => RemoveLinea(linea)">x @linea.NombreAccesorio</button>
+            }
+
+            @* Acción: pasar a la página de crear la compra *@
+            <button class="btn btn-primary" @onclick="FinalizarCompra" id="finalizarCompraButton">Finalizar compra</button>
+        </div>
+    </div>
+</div>
+
+@* ===== 3. Lógica C# ===== *@
+@code {
+    // Accesorios que se muestran en la tabla
+    private ICollection<AccesorioDTO>? accesorios;
+
+    // Valores de los filtros, enlazados con @bind
+    private string? nombreAccesorio;
+    private string categoriaSeleccionada = "Todas";
+
+    // El carrito se guarda en el StateContainer
+    private CompraAccesorioDTO compra => compraState.Compra;
+    private bool hideCarrito => compra.Lineas.Count == 0;
+
+    // Al abrir la página se cargan todos los accesorios
+    protected override async Task OnInitializedAsync()
+    {
+        accesorios = await API.GetAccesoriosAsync(null, null);
+    }
+
+    // Busca los accesorios aplicando los filtros
+    protected async void SearchAccesorios()
+    {
+        // "Todas" significa no filtrar por categoría
+        string? categoria = categoriaSeleccionada == "Todas" ? null : categoriaSeleccionada;
+        try
+        {
+            accesorios = await API.GetAccesoriosAsync(nombreAccesorio, categoria);
+        }
+        catch (ApiException)
+        {
+            // Si la API falla, se muestra la lista vacía
+            accesorios = new List<AccesorioDTO>();
+        }
+        // Vuelve a pintar la página con los nuevos datos
+        StateHasChanged();
+    }
+
+    // Añade el accesorio al carrito
+    private void AddAccesorio(AccesorioDTO accesorio) => compraState.AddAccesorioToCompra(accesorio);
+
+    // Elimina el accesorio del carrito
+    private void RemoveLinea(LineaCompraAccesorioDTO linea) => compraState.RemoveLineaCompra(linea);
+
+    // Pasa a la página de crear la compra
+    private void FinalizarCompra() => navigation.NavigateTo("/compraaccesorios/crearcompraaccesorios");
+}
