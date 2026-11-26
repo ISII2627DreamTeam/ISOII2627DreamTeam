@@ -1,0 +1,105 @@
+@* ===== 1. Directivas ===== *@
+@page "/compraaccesorios/detailcompraaccesorios"
+@using AppForSEII.Web.API
+@* Cliente de la API para obtener la compra *@
+@inject AppForSEIIAPIClient API
+@* Obliga a iniciar sesión (precondición del caso de uso) *@
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+@* ===== 2. HTML ===== *@
+<PageTitle>Detalle de la compra</PageTitle>
+<h3>Compra realizada</h3>
+
+@* Si no hay compra se muestra el error; si la hay, sus datos *@
+@if (compra == null)
+{
+    <p id="ErrorCompra">@error</p>
+}
+else
+{
+    @* Datos del cliente y de la compra *@
+    <table class="table table-borderless table-sm">
+        <tr>
+            <th>Nombre y apellidos</th>
+            <td id="NombreApellidos">@compra.NombreCliente @compra.ApellidosCliente</td>
+        </tr>
+        <tr>
+            <th>Dirección de envío</th>
+            <td id="DireccionEnvio">@compra.DireccionEnvio</td>
+        </tr>
+        <tr>
+            <th>Número de teléfono</th>
+            <td id="NumeroTelefono">@compra.NumeroTelefono</td>
+        </tr>
+        <tr>
+            <th>Método de pago</th>
+            <td id="MetodoPago">@compra.MetodoPago</td>
+        </tr>
+        <tr>
+            <th>Fecha de compra</th>
+            <td id="FechaCompra">@compra.FechaCompra.ToString("dd/MM/yyyy HH:mm")</td>
+        </tr>
+    </table>
+
+    @* Accesorios comprados *@
+    <h4>Accesorios comprados</h4>
+    <table class="table" id="AccesoriosComprados">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Cantidad</th>
+                <th>Precio por unidad</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @* Una fila por cada línea de la compra *@
+            @foreach (var linea in compra.Lineas)
+            {
+                <tr id="Linea_@linea.NombreAccesorio">
+                    <td>@linea.NombreAccesorio</td>
+                    <td>@linea.Cantidad</td>
+                    <td>@linea.PrecioUnidad €</td>
+                    <td>@linea.Subtotal €</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            @* colspan="3" junta 3 columnas para que el total quede en la última *@
+            <tr>
+                <th colspan="3" class="text-end">Precio total</th>
+                <td id="PrecioTotal">@compra.PrecioTotal €</td>
+            </tr>
+        </tfoot>
+    </table>
+}
+
+@* ===== 3. Lógica C# ===== *@
+@code {
+    // Id de la compra que llega en la URL: ...detailcompraaccesorios?CompraID=1
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public int CompraID { get; set; }
+
+    // Compra que se muestra en la página
+    private CompraAccesorioDTO? compra;
+
+    // Mensaje si no se encuentra la compra
+    private string error = "";
+
+    // Al abrir la página se pide la compra a la API
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            compra = await API.GetCompraAccesorioAsync(CompraID);
+        }
+        catch (ApiException)
+        {
+            // La API devuelve 404 si no existe una compra con ese Id
+            compra = null;
+            error = $"No existe ninguna compra con id = {CompraID}";
+        }
+    }
+}
